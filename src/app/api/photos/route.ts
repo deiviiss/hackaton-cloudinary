@@ -1,36 +1,46 @@
-import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
+import { NextResponse } from 'next/server'
+import path from 'path'
 
-export async function POST(request: NextRequest) {
+import { uploadImageToCloudinary } from '@/lib/cloudinary'
+import { THEMA } from '@/types'
+import { FormOutputData } from '@/types/api/photo'
+
+export async function POST(request: Request) {
 	try {
 		const formData = await request.formData()
-		const image = formData.get('image')
-		const theme = formData.get('theme')
-		const description = formData.get('description')
+
+		const image = formData.get('image') as File
+		const theme = formData.get('theme') as THEMA
+		const description = formData.get('description') as string
 
 		if (!image || !theme || !description) {
 			return NextResponse.json(
-				{ error: 'All fields are required' },
+				{ error: 'Missing required fields' },
 				{ status: 400 },
 			)
 		}
+		const tempDir = path.join(process.cwd(), 'temp')
+		const filePath = path.join(tempDir, image.name)
 
-		// const cloudinaryResult: any = await uploadImageToCloudinary(image)
-		// const imageUrl = cloudinaryResult.secure_url
+		if (!fs.existsSync(tempDir)) {
+			fs.mkdirSync(tempDir)
+		}
 
-		// const processedImageUrl = await processImageWithGenBackground(
-		// 	imageUrl,
-		// 	theme,
-		// )
+		const fileBuffer = await image.arrayBuffer()
+		fs.writeFileSync(filePath, Buffer.from(fileBuffer))
 
-		// 3. Responder con la URL de la imagen procesada
-		return NextResponse.json(
-			{
-				// imageId: cloudinaryResult.public_id,
-				// processedImageUrl: processedImageUrl,
-				description: description,
-			},
-			{ status: 200 },
-		)
+		const cloudinaryResult: any = await uploadImageToCloudinary(filePath)
+		const imageUrl = cloudinaryResult.secure_url
+
+		const respose: FormOutputData = {
+			imageId: cloudinaryResult.public_id,
+			url: imageUrl,
+			theme: theme,
+			description: description,
+		}
+
+		return NextResponse.json(respose, { status: 200 })
 	} catch (error: unknown) {
 		console.error('Error in POST /api/v1/upload:', error)
 		return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
