@@ -80,7 +80,7 @@ model SocialMedia {
 model ImageSocialType {
   id            String      @id @default(uuid())
   socialMediaId String      @map("social_media_id")
-  high          Int // Alto máximo de la imagen
+  height        Int // Alto máximo de la imagen
   width         Int // Ancho máximo de la imagen
   format        String // Formato de la imagen (por ejemplo, JPG, PNG)
   createdAt     DateTime    @default(now()) @map("created_at")
