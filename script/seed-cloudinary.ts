@@ -16,14 +16,15 @@ async function main() {
 		// Crear nuevos registros users
 		const userCreated = await prisma.user.create({
 			data: {
-				email: 'fasdfa@gmail.com',
-				name: 'asdfasd',
-				password: 'asdfasdf',
+				email: 'user@gmail.com',
+				name: 'user',
+				password: 'user123',
 			},
 		})
 
 		const userImageCreated = await prisma.userImage.create({
 			data: {
+				userId: userCreated.id,
 				path: 'https://media.gq.com/photos/63e2b84fc3e6ea31f7c7dd30/16:9/w_2560%2Cc_limit/best-shoe-brands-nike-asics-celine.jpg',
 			},
 		})
@@ -32,7 +33,7 @@ async function main() {
 			data: {
 				userImageId: userImageCreated.id,
 				path: 'https://thumbs.dreamstime.com/z/flaming-running-shoes-pumpkins-dark-background-halloween-concept-generative-ai-animal-ai-flaming-running-shoes-pumpkins-286823361.jpg?ct=jpeg',
-				prompt: 'A pair of shoes that are on fire',
+				prompt: 'Un part de zapatillas en llamas para halloween',
 			
 			},
 		})
@@ -46,8 +47,8 @@ async function main() {
 		await prisma.socialPost.create({
 			data: {
 				userImageResultId: userImageResultCreated.id,
-				descriptionPromt: 'A pair of shoes that are on fire for halloween',
-				descriptionResult: 'A pair of shoes that are on fire for halloween with pumpkins',
+				descriptionPromt: 'Un par de zapatillas en llamas para halloween con calabazas y fuego en el fondo',
+				descriptionResult: 'Disfruta de un part de zapatillas en llamas para halloween con calabazas y fuego en el fondo',
 				socialMediaId: socialMediaCreated.id,
 			},
 		})
@@ -55,8 +56,8 @@ async function main() {
 		await prisma.imageSocialType.create({
 			data: {
 				format: 'jpg',
-				height: 100,
-				width: 100,
+				height: 1920,
+				width: 1080,
 				socialMediaId: socialMediaCreated.id,
 			},
 		})
