@@ -18,6 +18,7 @@ model User {
   id            String    @id @default(uuid())
   name          String    @db.VarChar(50)
   email         String    @unique @db.VarChar(150)
+  password      String    @db.VarChar(255)
 
   createdAt DateTime @default(now()) @map("created_at")
   updatedAt DateTime @updatedAt @map("updated_at")
