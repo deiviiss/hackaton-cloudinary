@@ -37,5 +37,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+/temp
+
 # git diff
 diff.txt
