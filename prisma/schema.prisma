@@ -23,6 +23,8 @@ model User {
   updatedAt DateTime @updatedAt
 
   userImages UserImage[] // Relación con las imágenes subidas por el usuario
+
+  @@map("users")
 }
 
 model UserImage {
@@ -34,6 +36,8 @@ model UserImage {
 
   user             User?             @relation(fields: [userId], references: [id])
   userImageResults UserImageResult[] // Relación con los resultados generados de la imagen
+
+  @@map("users_images")
 }
 
 model UserImageResult {
@@ -46,6 +50,8 @@ model UserImageResult {
 
   userImage   UserImage    @relation(fields: [userImageId], references: [id])
   socialPosts SocialPost[] // Relación con las publicaciones sociales
+
+  @@map("users_images_results")
 }
 
 model SocialPost {
@@ -59,6 +65,8 @@ model SocialPost {
 
   userImageResult UserImageResult @relation(fields: [userImageResultId], references: [id])
   socialMedia     SocialMedia     @relation(fields: [socialMediaId], references: [id])
+
+  @@map("social_posts")
 }
 
 model SocialMedia {
@@ -69,6 +77,8 @@ model SocialMedia {
 
   socialPosts      SocialPost[] // Relación con publicaciones en esta red social
   imageSocialTypes ImageSocialType[] // Tipos de imágenes soportadas
+
+  @@map("social_media")
 }
 
 model ImageSocialType {
@@ -81,4 +91,6 @@ model ImageSocialType {
   updatedAt     DateTime @updatedAt
 
   socialMedia SocialMedia @relation(fields: [socialMediaId], references: [id])
+
+  @@map("images_social_types")
 }
