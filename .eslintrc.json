@@ -1,3 +1,54 @@
 {
-  "extends": ["next/core-web-vitals", "next/typescript"]
+  "env": {
+    "browser": true,
+    "es2021": true
+  },
+    // "next/core-web-vitals",
+    // "eslint:recommended",
+    // "plugin:@typescript-eslint/recommended",
+    // "next/typescript",
+    "extends": [
+    "next/core-web-vitals",
+    "eslint-config-prettier"
+  ],
+  "parser": "@typescript-eslint/parser",
+  "parserOptions": {
+    "ecmaVersion": "latest",
+    "sourceType": "module"
+  },
+  "plugins": [
+    "@typescript-eslint"
+  ],
+  "rules": {
+    "no-console": "warn",
+    "import/order": [
+      "error",
+      {
+        "groups": [
+          [
+            "builtin",
+            "external"
+          ],
+          "internal",
+          [
+            "parent",
+            "sibling",
+            "index"
+          ]
+        ],
+        "newlines-between": "always",
+        "alphabetize": {
+          "order": "asc",
+          "caseInsensitive": true
+        }
+      }
+    ],
+    "no-trailing-spaces": "error", // Sin espacios al final de línea
+    "no-multiple-empty-lines": [
+      "error",
+      {
+        "max": 1
+      }
+    ]
+  }
 }
