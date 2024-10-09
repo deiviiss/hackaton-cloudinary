@@ -15,25 +15,24 @@ datasource db {
 }
 
 model User {
-  id        Int      @id @default(autoincrement())
-  email     String   @unique
-  name      String
-  password  String
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  //Id must be uuid instead of varchar
+  id         String      @id @default(uuid()) // UUID como identificador
+  email      String      @unique
+  name       String
+  password   String
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
   userImages UserImage[] // Relación con las imágenes subidas por el usuario
 
   @@map("users")
 }
 
 model UserImage {
-  id        Int      @id @default(autoincrement())
-  userId    Int?
-  path      String // Ruta de almacenamiento de la imagen subida
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id               String            @id @default(uuid())
+  userId           String?           @map("user_id")
+  path             String // Ruta de almacenamiento de la imagen subida
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
   user             User?             @relation(fields: [userId], references: [id])
   userImageResults UserImageResult[] // Relación con los resultados generados de la imagen
 
@@ -41,13 +40,12 @@ model UserImage {
 }
 
 model UserImageResult {
-  id          Int      @id @default(autoincrement())
-  userImageId Int
+  id          String       @id @default(uuid())
+  userImageId String       @map("user_image_id")
   path        String // Ruta de almacenamiento del resultado generado
   prompt      String // Prompt utilizado para generar la imagen
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
   userImage   UserImage    @relation(fields: [userImageId], references: [id])
   socialPosts SocialPost[] // Relación con las publicaciones sociales
 
@@ -55,26 +53,24 @@ model UserImageResult {
 }
 
 model SocialPost {
-  id                Int      @id @default(autoincrement())
-  userImageResultId Int
-  socialMediaId     Int
-  descriptionPromt  String // Prompt utilizado para generar la descripción
-  descriptionResult String // Descripción generada para la publicación en redes sociales
-  createdAt         DateTime @default(now())
-  updatedAt         DateTime @updatedAt
-
-  userImageResult UserImageResult @relation(fields: [userImageResultId], references: [id])
-  socialMedia     SocialMedia     @relation(fields: [socialMediaId], references: [id])
+  id                String          @id @default(uuid())
+  userImageResultId String          @map("user_image_result_id")
+  socialMediaId     String          @map("social_media_id")
+  descriptionPromt  String          @map("description_promt") // Descripción generada para la publicación en redes sociales
+  descriptionResult String          @map("description_result") // Descripción generada para la publicación en redes sociales
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  userImageResult   UserImageResult @relation(fields: [userImageResultId], references: [id])
+  socialMedia       SocialMedia     @relation(fields: [socialMediaId], references: [id])
 
   @@map("social_posts")
 }
 
 model SocialMedia {
-  id        Int      @id @default(autoincrement())
-  name      String   @unique // Nombre de la red social (por ejemplo, Facebook, Twitter)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
+  id               String            @id @default(uuid())
+  name             String            @unique // Nombre de la red social (por ejemplo, Facebook, Twitter)
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
   socialPosts      SocialPost[] // Relación con publicaciones en esta red social
   imageSocialTypes ImageSocialType[] // Tipos de imágenes soportadas
 
@@ -82,15 +78,14 @@ model SocialMedia {
 }
 
 model ImageSocialType {
-  id            Int      @id @default(autoincrement())
+  id            String      @id @default(uuid())
+  socialMediaId String      @map("social_media_id")
   high          Int // Alto máximo de la imagen
   width         Int // Ancho máximo de la imagen
   format        String // Formato de la imagen (por ejemplo, JPG, PNG)
-  socialMediaId Int
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
-
-  socialMedia SocialMedia @relation(fields: [socialMediaId], references: [id])
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  socialMedia   SocialMedia @relation(fields: [socialMediaId], references: [id])
 
   @@map("images_social_types")
 }
