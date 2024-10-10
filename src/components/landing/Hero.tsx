@@ -1,4 +1,6 @@
+import { Sparkles } from 'lucide-react'
 import Image from 'next/image'
+import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
@@ -44,7 +46,7 @@ const Hero = () => {
 				/>
 			</div>
 
-			<div className="relative">
+			<div className="relative tada ">
 				<div className="md:size-[100px] size-[80px] absolute md:-top-[68px] -top-[60px] -left-[40px] -rotate-[20deg]  hover:scale-105 transition-all">
 					<Image
 						src="https://cdn-icons-png.flaticon.com/128/1235/1235127.png"
@@ -54,7 +56,7 @@ const Hero = () => {
 						loading="eager"
 					/>
 				</div>
-				<h1 className="md:text-9xl sm:text-8xl text-6xl font-extrabold ">
+				<h1 className="md:text-9xl sm:text-8xl text-6xl font-extrabold">
 					PicTeller
 				</h1>
 			</div>
@@ -68,9 +70,15 @@ const Hero = () => {
 				</p>
 			</div>
 			<div className="z-0 flex flex-wrap gap-5 items-center justify-center">
-				<Button size="lg" className=" font-semibold">
-					Pruebalo ahora
-				</Button>
+				<Link href="/">
+					<Button
+						size="lg"
+						className=" font-semibold flex items-center justify-center gap-2 pulse text-lg"
+					>
+						Pruebalo ahora
+						<Sparkles className="size-6" />
+					</Button>
+				</Link>
 			</div>
 		</header>
 	)

@@ -43,7 +43,18 @@ const Footer = () => {
 					loading="lazy"
 				/>
 			</div>
-			<span className="font-semibold text-2xl underline">Picteller</span>
+			<div className="flex items-center gap-2 justify-center">
+				<div className="size-[35px] relative ">
+					<Image
+						src="https://cdn-icons-png.flaticon.com/128/1235/1235127.png"
+						alt="magic hat"
+						className=""
+						fill
+						loading="eager"
+					/>
+				</div>
+				<span className="font-semibold text-2xl underline">Picteller</span>
+			</div>
 			<div className="flex items-center justify-center w-fit gap-2 mx-auto italic md:text-base text-sm">
 				Powered by{' '}
 				<span className="bg-blue-800 p-1 px-2 font-semibold rounded-lg not-italic">

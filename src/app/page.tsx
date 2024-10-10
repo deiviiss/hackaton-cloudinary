@@ -7,8 +7,6 @@ import Navbar from '@/components/landing/Navbar'
 
 const font = Poppins({ weight: ['400', '600', '800'], subsets: ['latin'] })
 
-// TODO: style: add some animations or lottie images
-
 export default function Home() {
 	return (
 		<div className={font.className}>

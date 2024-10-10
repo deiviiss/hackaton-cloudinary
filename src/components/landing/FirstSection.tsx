@@ -15,7 +15,7 @@ const FirstSection = () => {
 						Automatización de Contenido
 					</h5>
 					<figcaption className=" flex-none size-[230px] rounded bg-purple-900 relative">
-						<div className="size-[100px] absolute top-[50px] -left-[50px] z-10 -rotate-6">
+						<div className="size-[100px] absolute top-[50px] -left-[50px] z-10 -rotate-6 float">
 							<Image
 								src="https://cdn-icons-png.flaticon.com/128/3538/3538416.png"
 								alt="ghost-card"
@@ -133,7 +133,7 @@ const FirstSection = () => {
 						Multicanalidad.
 					</h5>
 					<figcaption className=" flex-none size-[230px] rounded bg-purple-900 relative">
-						<div className="size-[100px] absolute top-[140px]  -right-[40px] -rotate-12 z-10 scale-x-[-1]">
+						<div className="size-[100px] absolute top-[140px]  -right-[40px] -rotate-12 z-10 scale-x-[-1] float-right">
 							<Image
 								src="https://cdn-icons-png.flaticon.com/128/3538/3538416.png"
 								alt="ghost-card"

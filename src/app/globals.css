@@ -79,3 +79,81 @@ body {
 		@apply bg-purple-800 text-white;
 	}
 }
+
+@keyframes pulse {
+	from {
+		transform: scale3d(1, 1, 1);
+	}
+
+	50% {
+		transform: scale3d(1.05, 1.05, 1.05);
+	}
+
+	to {
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+.pulse {
+	animation: pulse 2s ease-in-out infinite alternate-reverse;
+}
+
+@keyframes float {
+	0%,
+	100% {
+		transform: translateY(0);
+	}
+	50% {
+		transform: translateY(-20px);
+	}
+}
+
+@keyframes floatRight {
+	0%,
+	100% {
+		transform: translateY(0) scaleX(-1);
+	}
+	50% {
+		transform: translateY(-20px) scaleX(-1);
+	}
+}
+
+.float {
+	animation: float 3s ease-in-out infinite;
+}
+.float-right {
+	animation: floatRight 3s ease-in-out infinite;
+}
+
+@keyframes tada {
+	from {
+		transform: scale3d(1, 1, 1);
+	}
+
+	10%,
+	20% {
+		transform: scale3d(0.9, 0.9, 0.9) rotate3d(0, 0, 1, -3deg);
+	}
+
+	30%,
+	50%,
+	70%,
+	90% {
+		transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, 3deg);
+	}
+
+	40%,
+	60%,
+	80% {
+		transform: scale3d(1.1, 1.1, 1.1) rotate3d(0, 0, 1, -3deg);
+	}
+
+	to {
+		transform: scale3d(1, 1, 1);
+	}
+}
+
+.tada {
+	animation: tada 1s linear 3s;
+	animation-iteration-count: 2;
+}
