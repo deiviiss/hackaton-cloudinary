@@ -1,11 +1,14 @@
+/* eslint-disable @next/next/no-img-element */
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown } from 'lucide-react'
 import { useState } from 'react'
+import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
+import { errorToast, successToast } from '@/components/Toasts'
 import { Button } from '@/components/ui/button'
 import {
 	Command,
@@ -21,7 +24,6 @@ import {
 	FormLabel,
 	FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import {
 	Popover,
 	PopoverContent,
@@ -52,105 +54,105 @@ const formSchema = z.object({
 })
 
 function MainForm() {
-	const [selectedImages, setSelectedImages] = useState<File[]>([])
 	const [open, setOpen] = useState(false)
 	const [themeSelected, setThemeSelected] = useState('')
 	const [imageError, setImageError] = useState<string | null>(null)
+	const [files, setFiles] = useState<File[]>([])
 
-	const handleImageChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-		if (event.target.files) {
-			const filesArray = Array.from(event.target.files)
-
-			if (filesArray.length + selectedImages.length > 3) {
-				setImageError('Solo puedes seleccionar 3 imágenes')
-				return
-			}
-
-			setSelectedImages((prevImages) => prevImages.concat(filesArray))
+	const onDrop = (acceptedFiles: any) => {
+		if (acceptedFiles.length > 3) {
+			setImageError('Solo puedes seleccionar 3 imagenes')
+			errorToast('Solo puedes seleccionar 3 imagenes')
+			return
+		} else {
+			setFiles(acceptedFiles)
+			setImageError('')
 		}
 	}
 
-	const handleRemoveImage = (index: number) => {
-		setSelectedImages((prevImages) =>
-			prevImages.filter((_, imgIndex) => imgIndex !== index),
+	const { getRootProps, getInputProps } = useDropzone({
+		onDrop,
+		accept: {
+			'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
+		},
+		multiple: true,
+	})
+
+	const removeFile = (indexToRemove: number) => {
+		setFiles((prevFiles) =>
+			prevFiles.filter((_, index) => index !== indexToRemove),
 		)
 	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
 		defaultValues: {
-			images: null,
 			description: '',
 		},
 	})
 
 	function onSubmit(values: z.infer<typeof formSchema>) {
-		console.log(values)
-		console.log('selected image', selectedImages)
-		console.log('theme', themeSelected)
+		if (files.length === 0) {
+			errorToast('Por favor selecciona al menos una imgen')
+		} else if (themeSelected === '') {
+			errorToast('Por favor selecciona una tematica')
+		} else {
+			const formData = new FormData()
+			formData.append('tema', themeSelected)
+			formData.append('descripcion', values.description ?? '')
+			files.forEach((file, index) => {
+				formData.append(`imagen-${index}`, file)
+			})
+
+			formData.forEach((value, key) => {
+				console.log(key + ':', value)
+			})
+			successToast('Imágenes subidas')
+		}
 	}
 
 	return (
 		<Form {...form}>
-			<form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 w-1/3">
+			<form
+				onSubmit={form.handleSubmit(onSubmit)}
+				className="space-y-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-1 md:p-0"
+			>
 				{/* DROPZONE */}
-				{selectedImages.length > 0 ? (
-					<div className="grid grid-cols-3 gap-4">
-						{selectedImages.map((image, index) => (
-							<div key={index} className="relative">
+				{files.length > 0 ? (
+					<section className="grid grid-cols-3 gap-1">
+						{files.map((file, index) => (
+							<div
+								key={index}
+								className="text-sm text-neutral-500 relative shadow"
+							>
 								<img
-									src={URL.createObjectURL(image)}
+									src={URL.createObjectURL(file)}
 									alt={`upload-preview-${index}`}
 									className="h-48 w-full object-cover rounded-lg"
 								/>
 								<button
-									onClick={() => handleRemoveImage(index)}
-									className="absolute top-0 right-0 bg-red-500 text-white text-xs px-2 py-1 rounded-full"
+									onClick={() => removeFile(index)}
+									className="bg-red-500 text-white rounded-full absolute top-1 right-1 px-2 py-1"
 								>
-									&times;
+									&#10005;
 								</button>
 							</div>
 						))}
-					</div>
+					</section>
 				) : (
-					<FormField
-						control={form.control}
-						name="images"
-						render={({ field }) => (
-							<FormItem>
-								<FormControl>
-									<>
-										<div className="image-dropzone">
-											<FormLabel
-												htmlFor="file-upload"
-												className="text-xl py-7 text-neutral-300"
-											>
-												Sube o arrastra tu imagen
-											</FormLabel>
-
-											<Input
-												type="file"
-												id="file-upload"
-												className="hidden"
-												accept="image/*"
-												multiple
-												onChange={(event) => {
-													handleImageChange(event)
-													field.onChange(event)
-												}}
-											/>
-										</div>
-										{imageError && (
-											<p className="text-red-500 text-sm mt-2 text-center">
-												{imageError}
-											</p>
-										)}
-									</>
-								</FormControl>
-								<FormMessage />
-							</FormItem>
-						)}
-					/>
+					<div {...getRootProps()} className="image-dropzone">
+						<input {...getInputProps()} className="hidden" />
+						<FormLabel
+							htmlFor="file-upload"
+							className="py-7 text-neutral-300 flex flex-col gap-y-2 text-center"
+						>
+							<span className="text-xl">Sube o arrastra tu imagen</span>
+							<span className="text-sm">Max. 3 imágenes</span>
+						</FormLabel>
+					</div>
+				)}
+				{imageError && (
+					<span className="text-red-500 text-center">{imageError}</span>
 				)}
 
 				{/* THEME */}
