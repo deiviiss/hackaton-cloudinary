@@ -34,7 +34,7 @@ async function main() {
 				userImageId: userImageCreated.id,
 				path: 'https://thumbs.dreamstime.com/z/flaming-running-shoes-pumpkins-dark-background-halloween-concept-generative-ai-animal-ai-flaming-running-shoes-pumpkins-286823361.jpg?ct=jpeg',
 				prompt: 'Un part de zapatillas en llamas para halloween',
-			
+
 			},
 		})
 
@@ -43,7 +43,7 @@ async function main() {
 				name: 'Tiktok',
 			},
 		})
-		
+
 		await prisma.socialPost.create({
 			data: {
 				userImageResultId: userImageResultCreated.id,
@@ -61,7 +61,7 @@ async function main() {
 				socialMediaId: socialMediaCreated.id,
 			},
 		})
-		
+
 	} catch (err) {
 		console.error('Error deleting records or creating users:', err)
 		process.exit(1)
