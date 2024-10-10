@@ -9,7 +9,8 @@
 	},
 	"editor.formatOnSave": true,
 	"editor.defaultFormatter": "esbenp.prettier-vscode",
-	"[typescriptreact]": {
-		"editor.defaultFormatter": "dbaeumer.vscode-eslint"
-	}
+	"[prisma]": {
+		"editor.defaultFormatter": "Prisma.prisma"
+	},
+	"cSpell.enabled": false
 }

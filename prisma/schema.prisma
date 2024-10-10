@@ -9,19 +9,83 @@ generator client {
 }
 
 datasource db {
-  provider = "postgresql"
-  url      = env("POSTGRES_PRISMA_URL")
+  provider  = "postgresql"
+  url       = env("POSTGRES_PRISMA_URL")
   directUrl = env("POSTGRES_URL_NON_POOLING")
-} 
+}
 
 model User {
-  id            String    @id @default(uuid())
-  name          String    @db.VarChar(50)
-  email         String    @unique @db.VarChar(150)
-  password      String    @db.VarChar(255)
+  //Id must be uuid instead of varchar
+  id         String      @id @default(uuid()) // UUID como identificador
+  email      String      @unique
+  name       String
+  password   String
+  createdAt  DateTime    @default(now()) @map("created_at")
+  updatedAt  DateTime    @updatedAt @map("updated_at")
+  userImages UserImage[] // Relación con las imágenes subidas por el usuario
 
-  createdAt DateTime @default(now()) @map("created_at")
-  updatedAt DateTime @updatedAt @map("updated_at")
+  @@map("users")
+}
 
-  @@map("user_table")
+model UserImage {
+  id               String            @id @default(uuid())
+  userId           String?           @map("user_id")
+  path             String // Ruta de almacenamiento de la imagen subida
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  user             User?             @relation(fields: [userId], references: [id])
+  userImageResults UserImageResult[] // Relación con los resultados generados de la imagen
+
+  @@map("users_images")
+}
+
+model UserImageResult {
+  id          String       @id @default(uuid())
+  userImageId String       @map("user_image_id")
+  path        String // Ruta de almacenamiento del resultado generado
+  prompt      String // Prompt utilizado para generar la imagen
+  createdAt   DateTime     @default(now()) @map("created_at")
+  updatedAt   DateTime     @updatedAt @map("updated_at")
+  userImage   UserImage    @relation(fields: [userImageId], references: [id])
+  socialPosts SocialPost[] // Relación con las publicaciones sociales
+
+  @@map("users_images_results")
+}
+
+model SocialPost {
+  id                String          @id @default(uuid())
+  userImageResultId String          @map("user_image_result_id")
+  socialMediaId     String          @map("social_media_id")
+  descriptionPromt  String          @map("description_promt") // Descripción generada para la publicación en redes sociales
+  descriptionResult String          @map("description_result") // Descripción generada para la publicación en redes sociales
+  createdAt         DateTime        @default(now()) @map("created_at")
+  updatedAt         DateTime        @updatedAt @map("updated_at")
+  userImageResult   UserImageResult @relation(fields: [userImageResultId], references: [id])
+  socialMedia       SocialMedia     @relation(fields: [socialMediaId], references: [id])
+
+  @@map("social_posts")
+}
+
+model SocialMedia {
+  id               String            @id @default(uuid())
+  name             String            @unique // Nombre de la red social (por ejemplo, Facebook, Twitter)
+  createdAt        DateTime          @default(now()) @map("created_at")
+  updatedAt        DateTime          @updatedAt @map("updated_at")
+  socialPosts      SocialPost[] // Relación con publicaciones en esta red social
+  imageSocialTypes ImageSocialType[] // Tipos de imágenes soportadas
+
+  @@map("social_media")
+}
+
+model ImageSocialType {
+  id            String      @id @default(uuid())
+  socialMediaId String      @map("social_media_id")
+  height        Int // Alto máximo de la imagen
+  width         Int // Ancho máximo de la imagen
+  format        String // Formato de la imagen (por ejemplo, JPG, PNG)
+  createdAt     DateTime    @default(now()) @map("created_at")
+  updatedAt     DateTime    @updatedAt @map("updated_at")
+  socialMedia   SocialMedia @relation(fields: [socialMediaId], references: [id])
+
+  @@map("images_social_types")
 }
