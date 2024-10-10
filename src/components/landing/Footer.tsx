@@ -1,5 +1,7 @@
 import Image from 'next/image'
 
+// TODO: improve footer, add more information
+
 const Footer = () => {
 	return (
 		<footer className="p-5 bg-purple-600/10 md:mt-40 mt-56 text-center md:space-y-5 space-y-8 relative pb-10">

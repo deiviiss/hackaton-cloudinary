@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
-
+// TODO: change button link path to rigth path
 const Navbar = () => {
 	return (
 		<nav className="bg-background/50 sticky top-0 z-50 p-3 md:px-6 px-3 flex justify-between items-center backdrop-blur-md">

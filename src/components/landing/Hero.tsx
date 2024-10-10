@@ -4,6 +4,8 @@ import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 
+// TODO: change button link path to rigth path
+
 const Hero = () => {
 	return (
 		<header className="relative min-h-[85dvh] bg-gradient-to-l to-orange-800 from-orange-600 flex items-center justify-center gap-5 flex-col">

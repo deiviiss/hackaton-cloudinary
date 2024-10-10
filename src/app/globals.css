@@ -157,3 +157,18 @@ body {
 	animation: tada 1s linear 3s;
 	animation-iteration-count: 2;
 }
+
+/* scroll */
+
+/* (Chrome, Safari) */
+html::-webkit-scrollbar {
+	@apply w-[12px];
+}
+
+html::-webkit-scrollbar-thumb {
+	@apply rounded-md bg-purple-800 hover:bg-purple-700 active:bg-purple-900 transition-all ease-in duration-200;
+}
+
+html::-webkit-scrollbar-track {
+	@apply bg-black;
+}
