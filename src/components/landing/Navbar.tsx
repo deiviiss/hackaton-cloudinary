@@ -19,7 +19,7 @@ const Navbar = () => {
 				<span>PicTeller</span>
 			</div>
 
-			<Link href="/">
+			<Link href="/form">
 				<Button className="font-semibold">Pruebalo ahora</Button>
 			</Link>
 		</nav>

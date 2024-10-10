@@ -72,7 +72,7 @@ const Hero = () => {
 				</p>
 			</div>
 			<div className="z-0 flex flex-wrap gap-5 items-center justify-center">
-				<Link href="/">
+				<Link href="/form">
 					<Button
 						size="lg"
 						className=" font-semibold flex items-center justify-center gap-2 pulse text-lg"

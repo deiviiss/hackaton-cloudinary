@@ -12,17 +12,27 @@
 		"lint": "next lint"
 	},
 	"dependencies": {
+		"@hookform/resolvers": "3.9.0",
 		"@prisma/client": "5.20.0",
+		"@radix-ui/react-dialog": "1.1.2",
+		"@radix-ui/react-label": "2.1.0",
+		"@radix-ui/react-popover": "1.1.2",
 		"@radix-ui/react-slot": "1.1.0",
-		"cloudinary": "2.5.1",
-    		"class-variance-authority": "0.7.0",
+		"class-variance-authority": "0.7.0",
 		"clsx": "2.1.1",
+		"cmdk": "1.0.0",
 		"lucide-react": "0.451.0",
+		"cloudinary": "2.5.1",
 		"next": "14.2.15",
+		"next-themes": "0.3.0",
 		"react": "18",
 		"react-dom": "18",
+		"react-dropzone": "14.2.9",
+		"react-hook-form": "7.53.0",
+		"sonner": "1.5.0",
 		"tailwind-merge": "2.5.3",
-		"tailwindcss-animate": "1.0.7"
+		"tailwindcss-animate": "1.0.7",
+		"zod": "3.23.8"
 	},
 	"devDependencies": {
 		"@types/node": "20",
