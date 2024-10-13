@@ -28,4 +28,11 @@ const updateBackgroundImage = async (image: string, promp: string) => {
 	})
 }
 
+// Generate a caption for an image : https://cloudinary.com/blog/ai-powered-captioning-add-on
+export const generateCaption = async (image: string) => {
+	return cloudinary.uploader.upload(image, {
+		detection: 'captioning',
+	})
+}
+
 export { cloudinary, uploadImageToCloudinary, updateBackgroundImage }

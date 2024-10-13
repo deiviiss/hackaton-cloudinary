@@ -1,0 +1,59 @@
+### POST /api/storyteller
+POST http://localhost:3000/api/storyteller
+Content-Type: application/json
+
+{
+  "imagesId": [
+    "a321f180-cdcc-47ed-bea6-2dadae93457c"
+  ],
+  "theme": "halloween"
+}
+
+  # "a321f180-cdcc-47ed-bea6-2dadae93457c", "ae8f1028-d3db-43ac-ad7d-2ae07e08840e", "d9275e30-d03b-4db0-a751-db02e4ba817c"
+
+  # "description": "Incluye a la historia a los personajes de la pesadilla de Silent Hill, un juego de acción de 1996 que se centra en la lucha contra el mal. Los personajes son un grupo de soldados que luchan contra un maligno que se llama el Hombre de la Muerte (The Man of Death). El hombre de la muerte es un monstruo que puede ser controlado por los personajes y que tiene la capacidad de destruir a los enemigos. El juego se desarrolla en un mundo de fantasía y se basa en la historia de los personajes de Silent Hill."
+
+
+# Era una tranquila noche de otoño en Silent Hill. Las hojas caídas cubrían el suelo en tonos dorados y ámbar, mientras una suave brisa arrastraba un eco de risas lejanas. Pero el fresco aire de Halloween no podía ocultar el palpable terror que acechaba en las sombras. Un grupo de soldados, conducidos por el valiente Thomas, se adentró en las desoladas calles de la ciudad, armados no solo con fusiles, sino también con el coraje que se necesitaba para enfrentar al Hombre de la Muerte.
+
+# Mientras caminaban, un brillo inesperado llamó la atención del grupo. Un balón de fútbol dorado reposaba suavemente en un campo de hierba, sus destellos casi incendiaban el cielo dramático que se extendía sobre ellos. El feroz resplandor de las nubes parecía prometedor, pero el ambiente rápidamente cambió. La emoción se tornó en inquietud; sabían que ese balón no debía estar allí. No en Silent Hill.  Thomas se acercó para recogerlo, y al hacerlo, un escalofrío recorrió su espalda. De repente, un susurro frío, como un aliento helado, cruzó su oído: "Tu tiempo se acaba".
+
+# Obligados a seguir, el grupo decidió buscar refugio en una acogedora cabaña que se alzaba entre la frondosidad de los árboles. La luna, llena y brillante, iluminaba el camino, y los murciélagos danzaban a su alrededor en un ballet inquietante. El ambiente, aunque encantador a la vista, también llevaba consigo una sombra de desasosiego. Cada crujido del suelo bajo sus pies parecía intensificarse, como si la cabaña misma respirara una advertencia.
+
+# Una vez dentro, el interior acogedor les ofrecía un breve respiro, decorado con calabazas sonriendo y hojas de otoño dispersas por el suelo, como si celebraran la llegada del Halloween. Pero la calidez pronto se disipó cuando oyeron un estruendo proveniente del sótano. Intrigados y aterrados a la vez, se acercaron a la puerta, la cual estaba entreabierta. Rojo como el fuego, un sneaker vibrante se encontraba en el umbral, adornado con imágenes de calabazas y hojas secas.
+
+# Al recogerlo, una visión los abrumó. El Hombre de la Muerte, una figura alta y desfigurada, se alzó ante ellos, controlando el sneaker y el balón dorado, desatando un torrente de energía oscura. "He estado esperando”, rugió con una voz que parecía salir del mismo infierno. Con un movimiento, manipula las sombras que los rodean, distorsionando la realidad a su antojo.
+
+# La escena se convirtió en un caos frenético. Los soldados intentaron luchar, pero a cada intento de destruirlo, el Hombre de la Muerte se hacía más fuerte, alimentándose de su miedo. Las paredes de la cabaña comenzaron a desmoronarse, revelando escenas de su propio fracaso, derrotas que pensaban olvidadas.
+
+# Pero en la última oleada de pánico, Thomas recordó el poder del balón. "Usémoslo", gritó, sabiendo que su esencia contenía un fragmento de esperanza. Juntos, con un grito de unidad, lanzaron el balón directamente hacia el monstruo. La energía contenida en él estalló, iluminando el espacio con una luz dorada deslumbrante.
+
+# Con un grito desgarrador, el Hombre de la Muerte fue empujado hacia un rincón oscuro, donde la luz lo consumió, desintegrando su malignidad en la nada. Momentos después, un silencio sepulcral llenó la cabaña, y la luna iluminó a los soldados, quienes se dieron cuenta de que el mal había sido derrotado, al menos por un tiempo.
+
+# Sin embargo, en el eco de la noche, el susurro seguía resonando: "El juego aún no ha terminado". Al mirar por la ventana, los soldados vieron que el cielo ardía otra vez, y un viento gélido susurró sus nombres, prometiéndoles que otro Halloween traería consigo más pesadillas. En Silent Hill, el terror nunca se extingue, solo espera pacientemente su regreso.
+
+
+// historia sin descripcion 
+
+# {
+#   "generateStoryText": "Era una tranquila noche de otoño, cuando la brisa fresca susurraba entre los árboles y las hojas caídas crujían bajo los pies de quienes se aventuraban afuera. Todo parecía en calma, pero la atmósfera estaba impregnada de un extraño tipo de electricidad, de esos que anticipan sucesos extraordinarios. En medio de este panorama se encontraba un campo de fútbol, bañado por la luz de un ocaso dramático, donde una brillante pelota de fútbol dorada reposaba sola en la hierba.\n\nAquella pelota no era ordinaria; había pertenecido a un jugador que, según contaban las leyendas del pueblo, había hecho un pacto con fuerzas oscuras en busca de la gloria. Sus triunfos fueron grandiosos, pero su destino, trágico. Al caer la noche, un escalofrío recorrió el campo, como si la leyenda despertara con el viento.\n\nA pocos kilómetros de allí, un acogedor cottage brillaba bajo la luz de la luna llena. Las llamas de calabazas adornaban la ventana, llenando la habitación de sombras danzantes. Sin embargo, fuera, la penumbra se llenaba de murciélagos que surcaban el cielo, proyectando figuras siniestras sobre el tranquilo paisaje. La casa, aunque parecía un refugio, estaba a punto de convertirse en el escenario de eventos inquietantes.\n\nEsa noche, un grupo de amigos decidió aventurarse en una búsqueda de tesoros de Halloween, un juego que iba más allá de lo habitual. Mientras se acercaban al cottage, una vibrante zapatilla de deporte, decorada con hojas de otoño y calabazas, apareció en su camino. \"¡Miren! ¡Una zapatilla de la suerte!\", exclamó uno de ellos. Pero, como si la zapatilla hubiera sido una trampa planeada, la risa se detuvo en seco. Una sombra oscura se deslizó entre ellos y desapareció con un golpe seco. Una sensación de peligro se apoderó de todos.\n\nEn el cottage, los amigos decidieron refugiarse momentáneamente, buscando consejo en los rincones cubiertos de telarañas y memorias olvidadas. El aroma de las especias de otoño impregnaba el aire, pero un susurro resbaló entre el grupo como una brisa helada: \"No estamos solos\".\n\nDe repente, las luces comenzaron a parpadear, y la pelota dorada que había quedado olvidada en el campo apareció en la ventana, aterrizando con un golpe sordo; un eco escalofriante resonó en el cottage. Uno de los amigos, con un corazón tembloroso, se asomó por la ventana, solo para ver que el estadio a la distancia estaba iluminado, un espectáculo de luces coreográficamente macabras que los llamaba.\n\nSin pensarlo, se dejaron llevar, sintiendo la irresistible atracción del campo. A medida que cruzaban la distancia, algo en el aire se tornó más pesado. Las hojas se arrastraban en direcciones contrarias, y el viento parecía reír de sus meticulosos pasos. Al llegar, la esfera dorada centelleaba como el oro bajo la luz de la luna, pero no había sonidos de alegría, solo un silencio profundo.\n\nEn el centro del estadio, aparece una figura envuelta en sombras con la sonrisa torcida de quien había sido el antiguo ídolo del fútbol. \"¿Están listos para jugar?\" resonó su voz, helada y cargada de un eco de promesas rotas. Al sentir una presencia, el grupo intentó retroceder, pero la tierra se había vuelto un lodo pegajoso que los mantenía atrapados.\n\nUno a uno, los amigos comenzaron a desaparecer, como si los reclamos del pacto oscuro estuvieran tomando su sacrificio. La última imagen que quedó en sus ojos fue de la zapatilla de deporte vibrante desapareciendo en un giro de hojas de otoño, y el eco de risas macabras que se fundieron en la noche. \n\nAsí, el campo se dio a la soledad, la pelota dorada brillando siniestramente bajo el cielo de fuego, en una macabra celebración que continuaría eternamente. Durante las noches de Halloween, los ecos de sus risas aún reverberan en aquel cottage encantado, mientras el campo, entre sombras, espera ansioso a los siguientes aventureros que caigan en su trampa letal."
+
+
+// otra respuesta
+# Era una tranquila noche de octubre en el pequeño pueblo de San Verano. El aire fresco llevaba consigo el aroma de las hojas caídas, y todo parecía estar en calma bajo la tenue luz de la luna. Sin embargo, algo peculiar sucedía en el viejo estadio de fútbol, que desde hacía años había permanecido en desuso. Durante el día, los niños del vecindario jugaban en la hierba, pero al caer la tarde, el lugar se tornaba oscuro y lleno de secretos.
+
+# Aquella noche, un grupo de amigos decidió aventurarse al estadio, impulsados por las historias de fantasmas que se contaban entre los habitantes. Armados con linternas y un par de bocadillos, se acomodaron en las gradas, ignorando el ligero escalofrío que les recorría la espalda. En el centro del campo, una esfera dorada brillaba intensamente a la luz de la luna. Era un balón de fútbol, perfecto y resplandeciente, como si hubiese sido dejado ahí para desafiarlos.
+
+# A medida que la conversación fluía, el cielo se teñía de un rojo ardiente, como si las nubes atraparan el fuego de una tormenta lejana. De repente, un viento helado sopló por el campo, haciendo que las hojas crujieran en un siniestro murmullo. Uno de los chicos, Alejandro, se levantó para acercarse al balón dorado. Sus amigos lo miraron, inquietos. “Es solo un balón,” dijo riendo, aunque en el fondo, todos sentían un leve indicio de temor.
+
+# Al tocar el balón, el tiempo pareció detenerse. Un eco de risas resonó a su alrededor, como si los fantasmas de antiguos jugadores llenaran el campo de vida. La atmósfera se volvió densa y pesada, y los amigos comenzaron a sentirse mareados. “Deberíamos irnos,” sugirió Lucía, su voz temblorosa. Pero antes de que pudieran moverse, el cielo se oscureció por completo, las luces de la ciudad se apagaron y un grito desgarrador rompió el silencio.
+
+# Los amigos se quedaron paralizados, viendo cómo sombras sin forma emergían de las gradas, acercándose lentamente al campo. Una figura elevada, vestida con una camiseta desgastada del equipo local y una máscara de fútbol, emergió del manto de la noche. Tenía en sus manos el balón dorado y su mirada era intensa, penetrante.
+
+# “¿Por qué han venido al lugar de los que perdieron?” preguntó con una voz que parecía un eco del pasado. Los amigos retrocedieron, aterrorizados. En ese momento, se dieron cuenta de que la leyenda del estadio no solo hablaba de fantasmas: los jugadores que alguna vez jugaron con pasión estaban atrapados entre las sombras, buscando la redención que nunca alcanzaron.
+
+# Empacando sus cosas con prisa, decidieron escapar, pero mientras corrían, el balón dorado comenzó a rodar hacia ellos, empujado por una fuerza invisible. Se detuvo justo a sus pies, brillando con una luz ominosa que parecía arrastrar sus almas hacia el terreno del juego.
+
+# Aquel grupo de amigos comprendió que no podían escapar de su destino. La figura en la máscara sonrió, levantando el balón mientras una risa fría llenaba el aire. “Es hora de jugar,” susurró.
+
+# La noche se cerró sobre el estadio, y el eco de sus risas se fundió con los gritos de aquellos que un día soñaron con la gloria, ahora convertidos en leyenda. San Verano nunca volvió a ser el mismo, y el viejo estadio continuó allí, guardando secretos, esperando a los próximos incautos que se atrevieran a cruzar sus portones y desafiar a los fantasmas de un juego que nunca debería haberse olvidado. RESPONSE FINAL
