@@ -31,7 +31,6 @@ model UserImage {
   id               String            @id @default(uuid())
   userId           String?           @map("user_id")
   path             String // Ruta de almacenamiento de la imagen subida
-  captionGenerated String?           @map("caption_generated") // Descripción generada para la imagen
   createdAt        DateTime          @default(now()) @map("created_at")
   updatedAt        DateTime          @updatedAt @map("updated_at")
   user             User?             @relation(fields: [userId], references: [id])
@@ -41,14 +40,15 @@ model UserImage {
 }
 
 model UserImageResult {
-  id          String       @id @default(uuid())
-  userImageId String       @map("user_image_id")
-  path        String // Ruta de almacenamiento del resultado generado
-  prompt      String // Prompt utilizado para generar la imagen
-  createdAt   DateTime     @default(now()) @map("created_at")
-  updatedAt   DateTime     @updatedAt @map("updated_at")
-  userImage   UserImage    @relation(fields: [userImageId], references: [id])
-  socialPosts SocialPost[] // Relación con las publicaciones sociales
+  id               String       @id @default(uuid())
+  userImageId      String       @map("user_image_id")
+  path             String // Ruta de almacenamiento del resultado generado
+  prompt           String // Prompt utilizado para generar la imagen
+  captionGenerated String?      @map("caption_generated") // Descripción generada para la imagen
+  createdAt        DateTime     @default(now()) @map("created_at")
+  updatedAt        DateTime     @updatedAt @map("updated_at")
+  userImage        UserImage    @relation(fields: [userImageId], references: [id])
+  socialPosts      SocialPost[] // Relación con las publicaciones sociales
 
   @@map("users_images_results")
 }
