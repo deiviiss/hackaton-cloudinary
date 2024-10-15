@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { end, start } from '@/helpers/performance'
-import { generateCaption } from '@/lib/cloudinary'
+import { generateCaption, textOverlayImage } from '@/lib/cloudinary'
 import { generateStory } from '@/lib/openai'
 import prisma from '@/lib/prisma'
 import { StoryTellerSchema } from '@/schemas/storyteller'
@@ -9,23 +9,28 @@ import { StoryTellerSchema } from '@/schemas/storyteller'
 export async function POST(request: Request) {
 	start('storyteller')
 	try {
-		const {
-			imagesId,
-			theme,
-			description = '',
-		} = StoryTellerSchema.parse(await request.json())
+		const { imagesId, theme, description } = StoryTellerSchema.parse(
+			await request.json(),
+		)
 
-		// se podria tener una tabla StoryTeller que reuna las imagenes con un unico id de esa tabla que contiene las imagenes asi ya no se hace peticiones para cada imagen o mejor enviar las urls de las imagenes
+		// promised images from prisma
 		const promisedImageResult = imagesId.map((id) =>
 			prisma.userImageResult.findUnique({ where: { id } }),
 		)
 
 		const arrayImageResult = await Promise.all(promisedImageResult)
 
-		// Filtrar los resultados que son null
+		// filter results that are null
 		const validImageResults = arrayImageResult.filter(
 			(imageResult) => imageResult !== null,
 		)
+
+		if (!validImageResults.length) {
+			return NextResponse.json(
+				{ error: 'No se han encontrado imágenes' },
+				{ status: 400 },
+			)
+		}
 
 		// generate captions for each image
 		const promisedGenerateCaption = validImageResults.map((imageResult) =>
@@ -34,13 +39,13 @@ export async function POST(request: Request) {
 
 		const arrayGenerateCaption = await Promise.all(promisedGenerateCaption)
 
-		// get the captions in a single string
-		const responseCaption = arrayGenerateCaption
+		// get the captions in a single string, include the description from the request
+		const responseCaptionWithDescription = arrayGenerateCaption
 			.reduce(
 				(acc, curr, index) => {
 					const captionText =
 						curr.info.detection.captioning.status === 'complete'
-							? `${description ? index + 2 : index + 1}. ${curr.info.detection.captioning.data.caption}\n`
+							? `${index + 2}. ${curr.info.detection.captioning.data.caption}\n`
 							: ''
 
 					return acc + captionText
@@ -51,20 +56,40 @@ export async function POST(request: Request) {
 			)
 			.trim()
 
-		if (responseCaption === '') {
+		if (!responseCaptionWithDescription) {
 			return NextResponse.json(
-				{ error: 'No se ha generado ninguna descripción' },
+				{
+					error:
+						'No se ha generado ninguna descripción o no se ha realizado el generation captions de las imágenes',
+				},
 				{ status: 400 },
 			)
 		}
 
-		const generateStoryText = await generateStory(responseCaption, theme)
+		// generate story text
+		const generateStoryText = await generateStory(
+			responseCaptionWithDescription,
+			theme,
+		)
 
-		console.log(generateStoryText, 'RESPONSE FINAL')
+		// add text to the first image
+		const newImageWithText = await textOverlayImage(
+			validImageResults[0].path,
+			generateStoryText,
+		)
+
+		// const updateImage = await prisma.userImageResult.update({
+		// 	where: {
+		// 		id: validImageResults[0].id,
+		// 	},
+		// 	data: {
+
+    //   },
+		// })
 
 		return NextResponse.json(
 			{
-				generateStoryText,
+				newImageWithText: newImageWithText.secure_url,
 				imagesId,
 			},
 			{ status: 200 },

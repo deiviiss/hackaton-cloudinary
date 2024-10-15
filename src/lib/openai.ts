@@ -7,7 +7,7 @@ const clientOpenAI = new OpenAI({
 	apiKey: process.env['OPENAI_API_KEY'],
 })
 
-export async function generateStory(imageDescriptions: string, theme: THEMA) {
+export async function generateStory(content: string, theme: THEMA) {
 	try {
 		const response = await clientOpenAI.chat.completions.create({
 			model: 'gpt-4o-mini',
@@ -16,12 +16,12 @@ export async function generateStory(imageDescriptions: string, theme: THEMA) {
 					role: 'system',
 					content: HISTORY_THEMES[theme],
 				},
-				{ role: 'user', content: imageDescriptions },
+				{ role: 'user', content },
 			],
 		})
 
 		if (!response.choices[0].message.content) {
-			return 'No se ha generado una respuesta'
+			return 'No se ha generado una respuesta desde OpenAI'
 		}
 
 		return response.choices[0].message.content

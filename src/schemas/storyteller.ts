@@ -15,5 +15,5 @@ export const StoryTellerSchema = z.object({
 	theme: z.enum(arrayThemes, {
 		required_error: 'A theme is required',
 	}),
-	description: z.string().optional(),
+	description: z.string(),
 })
