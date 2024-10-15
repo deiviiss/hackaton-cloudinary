@@ -1,7 +1,7 @@
 import { THEMA } from '@/types/global/thema.enum'
 
 interface FormInputData {
-	image: File
+	image: File[]
 	theme: THEMA
 	description: string
 }
