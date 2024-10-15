@@ -27,7 +27,7 @@ export const uploadPhoto = async (formData: FormData) => {
 
 		return {
 			ok: true,
-			data: updateData,
+			data: { ...updateData, theme },
 		}
 	} catch (error) {
 		return {

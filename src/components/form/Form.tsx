@@ -32,6 +32,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
+import { useImageStore } from '@/lib/store/images'
 import { cn } from '@/lib/utils'
 
 const themes = [
@@ -61,6 +62,7 @@ function MainForm() {
   const [imageError, setImageError] = useState<string | null>(null)
   const [files, setFiles] = useState<File[]>([])
 	const router = useRouter()
+	const setData = useImageStore((state) => state.setData)
 
   const onDrop = (acceptedFiles: any) => {
     if (acceptedFiles.length > 3) {
@@ -121,7 +123,8 @@ function MainForm() {
 				errorToast('Error al subir las imágenes')
 			} else {
 				console.log(data)
-				successToast('Imágenes subidas')
+				setData(data)
+				successToast('Imagen subida')
 				router.push('/modify')
 			}
 		}
