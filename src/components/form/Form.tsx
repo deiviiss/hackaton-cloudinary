@@ -13,23 +13,23 @@ import { uploadPhoto } from '@/app/actions/photos/upload-photo'
 import { errorToast, successToast } from '@/components/Toasts'
 import { Button } from '@/components/ui/button'
 import {
-  Command,
-  CommandGroup,
-  CommandItem,
-  CommandList,
+	Command,
+	CommandGroup,
+	CommandItem,
+	CommandList,
 } from '@/components/ui/command'
 import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
+	Form,
+	FormControl,
+	FormField,
+	FormItem,
+	FormLabel,
+	FormMessage,
 } from '@/components/ui/form'
 import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
+	Popover,
+	PopoverContent,
+	PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
 import { useImageStore } from '@/lib/store/images'
@@ -42,14 +42,14 @@ import Twitter from '../icons/Twitter'
 import Footer from '../landing/Footer'
 
 const themes = [
-  {
-    value: 'halloween',
-    label: 'Halloween',
-  },
-  {
-    value: 'navidad',
-    label: 'Navidad',
-  },
+	{
+		value: 'halloween',
+		label: 'Halloween',
+	},
+	{
+		value: 'navidad',
+		label: 'Navidad',
+	},
 ]
 
 const socialButtons = [
@@ -72,49 +72,50 @@ const socialButtons = [
 ]
 
 const formSchema = z.object({
-  images: z.any(),
-  description: z
-    .string()
-    .min(2, {
-      message: 'La descripción es muy corta',
-    })
-    .optional(),
+	images: z.any(),
+	description: z
+		.string()
+		.min(2, {
+			message: 'La descripción es muy corta',
+		})
+		.optional(),
 })
 
 function MainForm() {
-  const [open, setOpen] = useState(false)
-  const [themeSelected, setThemeSelected] = useState('')
-  const [imageError, setImageError] = useState<string | null>(null)
-  const [files, setFiles] = useState<File[]>([])
+	const [open, setOpen] = useState(false)
+	const [themeSelected, setThemeSelected] = useState('')
+	const [imageError, setImageError] = useState<string | null>(null)
+	const [files, setFiles] = useState<File[]>([])
 	const [socialMediaCheck, setSocialMediaCheck] = useState(false)
 	const [socialSelected, setSocialSelected] = useState('')
+	const [isLoading, setIsLoading] = useState(false)
 	const router = useRouter()
 	const setData = useImageStore((state) => state.setData)
 
-  const onDrop = (acceptedFiles: any) => {
-    if (acceptedFiles.length > 1) {
-      setImageError('Solo puedes seleccionar 1 imagen')
-      errorToast('Solo puedes seleccionar 1 imagen')
-      return
-    } else {
-      setFiles(acceptedFiles)
-      setImageError('')
-    }
-  }
+	const onDrop = (acceptedFiles: any) => {
+		if (acceptedFiles.length > 1) {
+			setImageError('Solo puedes seleccionar 1 imagen')
+			errorToast('Solo puedes seleccionar 1 imagen')
+			return
+		} else {
+			setFiles(acceptedFiles)
+			setImageError('')
+		}
+	}
 
-  const { getRootProps, getInputProps } = useDropzone({
-    onDrop,
-    accept: {
-      'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
-    },
-    multiple: true,
-  })
+	const { getRootProps, getInputProps } = useDropzone({
+		onDrop,
+		accept: {
+			'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
+		},
+		multiple: true,
+	})
 
-  const removeFile = (indexToRemove: number) => {
-    setFiles((prevFiles) =>
-      prevFiles.filter((_, index) => index !== indexToRemove),
-    )
-  }
+	const removeFile = (indexToRemove: number) => {
+		setFiles((prevFiles) =>
+			prevFiles.filter((_, index) => index !== indexToRemove),
+		)
+	}
 
 	const form = useForm<z.infer<typeof formSchema>>({
 		resolver: zodResolver(formSchema),
@@ -130,33 +131,36 @@ function MainForm() {
 		}
 	}
 
-  async function onSubmit(values: z.infer<typeof formSchema>) {
-    if (files.length === 0) {
-      errorToast('Por favor selecciona al menos una imagen')
-    } else if (themeSelected === '') {
-      errorToast('Por favor selecciona una tematica')
-    } else {
-      const formData = new FormData()
-      const firstImage = files[0]
+	async function onSubmit(values: z.infer<typeof formSchema>) {
+		if (files.length === 0) {
+			errorToast('Por favor selecciona al menos una imagen')
+		} else if (themeSelected === '') {
+			errorToast('Por favor selecciona una tematica')
+		} else {
+			const formData = new FormData()
+			const firstImage = files[0]
 
-      formData.append('theme', themeSelected)
-      formData.append('description', values.description ?? '')
-      //! current api only accepts one image
-      formData.append('image', firstImage)
-      // files.forEach((file, index) => {
-      //   formData.append(`imagen-${index}`, file)
-      // })
+			formData.append('theme', themeSelected)
+			formData.append('description', values.description ?? '')
+			//! current api only accepts one image
+			formData.append('image', firstImage)
+			// files.forEach((file, index) => {
+			//   formData.append(`imagen-${index}`, file)
+			// })
 
-      // formData.forEach((value, key) => {
-      // 	console.log(key + ':', value)
-      // })
+			// formData.forEach((value, key) => {
+			// 	console.log(key + ':', value)
+			// })
 
-      const { ok, data } = await uploadPhoto(formData)
+			setIsLoading(true)
+			const { ok, data } = await uploadPhoto(formData)
 
 			if (!ok || !data) {
 				errorToast('Error al subir las imágenes')
+				setIsLoading(false)
 			} else {
 				console.log(data)
+				setIsLoading(false)
 				setData(data)
 				successToast('Imagen subida')
 				router.push('/result')
@@ -337,12 +341,13 @@ function MainForm() {
 
 						<button
 							type="submit"
+							disabled={isLoading}
 							className={cn('default-button', {
 								'halloween-button': themeSelected === 'halloween',
 								'navidad-button': themeSelected === 'navidad',
 							})}
 						>
-							Generar imagen
+							{isLoading ? 'Cargando...' : 'Generar imagen'}
 						</button>
 					</form>
 				</Form>

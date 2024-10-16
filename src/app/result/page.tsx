@@ -2,15 +2,22 @@
 'use client'
 
 import { redirect } from 'next/navigation'
+import { useState } from 'react'
 
 import Footer from '@/components/landing/Footer'
+import { Skeleton } from '@/components/ui/skeleton'
 import { useImageStore } from '@/lib/store/images'
 
 const Page = () => {
+	const [isImageLoading, setIsImageLoading] = useState(true)
 	const { imageUrl, updatedBgResult } = useImageStore()
 
 	if (imageUrl === '') {
 		redirect('/form')
+	}
+
+	const handleImageLoad = () => {
+		setIsImageLoading(false)
 	}
 
 	return (
@@ -27,10 +34,15 @@ const Page = () => {
 					</div>
 					<div className="w-full sm:w-1/4 flex flex-col">
 						<span className="font-bold text-xl">Imagen con tema</span>
+						{isImageLoading && (
+							<Skeleton className="w-full h-[300px] mt-2 rounded-xl" />
+						)}
 						<img
 							src={updatedBgResult}
 							alt="image placeholder"
-							className="w-full h-auto mt-2 rounded-xl"
+							className={`w-full h-auto mt-2 rounded-xl ${isImageLoading ? 'hidden' : ''}`}
+							onLoad={handleImageLoad}
+							onError={() => setIsImageLoading(false)}
 						/>
 						<div className="w-full place-items-center my-2 flex justify-center">
 							<a
