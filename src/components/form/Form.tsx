@@ -92,9 +92,9 @@ function MainForm() {
 	const setData = useImageStore((state) => state.setData)
 
   const onDrop = (acceptedFiles: any) => {
-    if (acceptedFiles.length > 3) {
-      setImageError('Solo puedes seleccionar 3 imagenes')
-      errorToast('Solo puedes seleccionar 3 imagenes')
+    if (acceptedFiles.length > 1) {
+      setImageError('Solo puedes seleccionar 1 imagen')
+      errorToast('Solo puedes seleccionar 1 imagen')
       return
     } else {
       setFiles(acceptedFiles)
@@ -159,13 +159,13 @@ function MainForm() {
 				console.log(data)
 				setData(data)
 				successToast('Imagen subida')
-				router.push('/modify')
+				router.push('/result')
 			}
 		}
 	}
 
 	return (
-		<main className="w-full h-full flex flex-col">
+		<div className="w-full h-full flex flex-col">
 			<section className="w-full min-h-screen flex justify-center items-center">
 				<Form {...form}>
 					<form
@@ -349,7 +349,7 @@ function MainForm() {
 			</section>
 
 			<Footer />
-		</main>
+		</div>
 	)
 }
 
