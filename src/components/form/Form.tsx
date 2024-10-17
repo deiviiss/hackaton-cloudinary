@@ -3,6 +3,7 @@
 
 import { zodResolver } from '@hookform/resolvers/zod'
 import { Check, ChevronsUpDown } from 'lucide-react'
+import { useRouter } from 'next/navigation'
 import { useState } from 'react'
 import { useDropzone } from 'react-dropzone'
 import { useForm } from 'react-hook-form'
@@ -31,6 +32,7 @@ import {
   PopoverTrigger,
 } from '@/components/ui/popover'
 import { Textarea } from '@/components/ui/textarea'
+import { useImageStore } from '@/lib/store/images'
 import { cn } from '@/lib/utils'
 
 const themes = [
@@ -59,6 +61,8 @@ function MainForm() {
   const [themeSelected, setThemeSelected] = useState('')
   const [imageError, setImageError] = useState<string | null>(null)
   const [files, setFiles] = useState<File[]>([])
+	const router = useRouter()
+	const setData = useImageStore((state) => state.setData)
 
   const onDrop = (acceptedFiles: any) => {
     if (acceptedFiles.length > 3) {
@@ -115,15 +119,16 @@ function MainForm() {
 
       const { ok, data } = await uploadPhoto(formData)
 
-      if (!ok || !data) {
-        errorToast('Error al subir las imágenes')
-      }
-
-      console.log(data)
-
-      successToast('Imágenes subidas')
-    }
-  }
+			if (!ok || !data) {
+				errorToast('Error al subir las imágenes')
+			} else {
+				console.log(data)
+				setData(data)
+				successToast('Imagen subida')
+				router.push('/modify')
+			}
+		}
+	}
 
   return (
     <Form {...form}>
@@ -178,7 +183,7 @@ function MainForm() {
           <Popover open={open} onOpenChange={setOpen}>
             <PopoverTrigger asChild>
               <Button
-			  	type="button"
+								type="button"
                 variant="outline"
                 role="combobox"
                 aria-expanded={open}

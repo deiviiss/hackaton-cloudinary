@@ -10,10 +10,24 @@ export const uploadPhoto = async (formData: FormData) => {
 		}
 
 		const responseData = await response.json()
+		const { url, description, imageId, theme } = responseData
+		const updateBackgroundResponse = await fetch('/api/photos/modify', {
+			method: 'POST',
+			body: JSON.stringify({
+				imageUrl: url,
+				imageId,
+				description,
+			}),
+		})
+
+		if (!updateBackgroundResponse.ok) {
+			throw new Error('Error en la subida de las imágenes')
+		}
+		const updateData = await updateBackgroundResponse.json()
 
 		return {
 			ok: true,
-			data: responseData,
+			data: { ...updateData, theme },
 		}
 	} catch (error) {
 		return {
