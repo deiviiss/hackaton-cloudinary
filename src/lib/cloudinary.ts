@@ -22,10 +22,20 @@ const uploadImageToCloudinary = async (image: string) => {
 	}
 }
 
-const updateBackgroundImage = async (image: string, promp: string) => {
-	return cloudinary.image(image, {
-		effect: 'gen_background_replace:' + promp,
+const updateBackgroundImage = async (
+	image: string,
+	prompt: string,
+	id: string,
+) => {
+	const formattedPrompt = `prompt_${prompt}`
+	let result = cloudinary.url(id, {
+		effect: 'gen_background_replace:' + formattedPrompt,
+		format: 'png',
 	})
+
+	result = result.replace(/\/v\d+\//, '/')
+
+	return result
 }
 
 export { cloudinary, uploadImageToCloudinary, updateBackgroundImage }
