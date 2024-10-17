@@ -32,41 +32,52 @@ export async function POST(request: Request) {
 		// 	)
 		// }
 
-		const validImageResults = [imagesUrl]
+		console.log('INGRESO INICIAL')
+
+		// const validImageResults = [imagesUrl]
 
 		// generate captions for each image
-		const promisedGenerateCaption = validImageResults.map((imageResult) =>
-			generateCaption(imageResult),
-		)
+		// const promisedGenerateCaption = validImageResults.map((imageResult) =>
+		// 	generateCaption(imageResult),
+		// )
 
-		const arrayGenerateCaption = await Promise.all(promisedGenerateCaption)
+		// const arrayGenerateCaption = await Promise.all(promisedGenerateCaption)
+
+		const promisedGenerateCaption = await generateCaption(imagesUrl)
+
+		console.log('SE GENERO EL CAPTION')
+
+		// const arrayGenerateCaption = [promisedGenerateCaption]
 
 		// get the captions in a single string, include the description from the request
-		const responseCaptionWithDescription = arrayGenerateCaption
-			.reduce(
-				(acc, curr, index) => {
-					const captionText =
-						curr.info.detection.captioning.status === 'complete'
-							? `${index + 2}. ${curr.info.detection.captioning.data.caption}\n`
-							: ''
+		// const responseCaptionWithDescription = arrayGenerateCaption
+		// 	.reduce(
+		// 		(acc, curr, index) => {
+		// 			const captionText =
+		// 				curr.info.detection.captioning.status === 'complete'
+		// 					? `${index + 2}. ${curr.info.detection.captioning.data.caption}\n`
+		// 					: ''
 
-					return acc + captionText
-				},
-				description
-					? `1. ${description.trim()}${description[description.length - 1] === '.' ? '' : '.'}\n`
-					: '',
-			)
-			.trim()
+		// 			return acc + captionText
+		// 		},
+		// 		description
+		// 			? `1. ${description.trim()}${description[description.length - 1] === '.' ? '' : '.'}\n`
+		// 			: '',
+		// 	)
+		// 	.trim()
 
-		if (!responseCaptionWithDescription) {
-			return NextResponse.json(
-				{
-					error:
-						'No se ha generado ninguna descripción o no se ha realizado el generation captions de las imágenes',
-				},
-				{ status: 400 },
-			)
-		}
+		// if (!responseCaptionWithDescription) {
+		// 	return NextResponse.json(
+		// 		{
+		// 			error:
+		// 				'No se ha generado ninguna descripción o no se ha realizado el generation captions de las imágenes',
+		// 		},
+		// 		{ status: 400 },
+		// 	)
+		// }
+
+		const responseCaptionWithDescription =
+			`1. ${description.trim()}${description[description.length - 1] === '.' ? '' : '.'}\n 2. ${promisedGenerateCaption.info.detection.captioning.data.caption}\n`.trim()
 
 		console.log(responseCaptionWithDescription, 'RESPONSE CAPTION')
 
@@ -84,7 +95,7 @@ export async function POST(request: Request) {
 		// add text to the first image
 		const newImageWithText = await textOverlayImage(
 			// validImageResults[0].path,
-			validImageResults[0],
+			imagesUrl,
 			// 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1729116443/hbclomk1azwdp1optstm.png',
 			generateStoryText,
 			description,

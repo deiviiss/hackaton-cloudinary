@@ -18,7 +18,7 @@ export const uploadPhoto = async (formData: FormData) => {
 			body: JSON.stringify({
 				imageUrl: url,
 				imageId,
-				description,
+				description: theme,
 			}),
 		})
 
