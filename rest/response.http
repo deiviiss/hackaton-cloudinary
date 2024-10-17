@@ -4,10 +4,17 @@ Content-Type: application/json
 
 {
   "imagesId": [
-    "3aa24065-1339-4c15-ade9-ac630ebc843c"
+    "d58706a2-928f-448f-8f02-5184e2a63623"
   ],
   "theme": "halloween",
-  "description": "30% de descuento"
+  "description": "20% de descuento"
 }
 
   # "a321f180-cdcc-47ed-bea6-2dadae93457c", "ae8f1028-d3db-43ac-ad7d-2ae07e08840e", "d9275e30-d03b-4db0-a751-db02e4ba817c"
+
+
+# https://res.cloudinary.com/dlixnwuhi/image/upload/v1729099218/sldgfdoegsvh0qyoblzx.jpg
+
+# https://res.cloudinary.com/dlixnwuhi/image/upload/v1729099314/oqxr8diy1x8bs0tle1ub.jpg
+
+# https://res.cloudinary.com/dlixnwuhi/image/upload/v1729099480/am4qr5u4q8zvwy9hnlrj.jpg

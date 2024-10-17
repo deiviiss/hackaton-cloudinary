@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server'
 
 import { end, start } from '@/helpers/performance'
-import { generateCaption, textOverlayImage } from '@/lib/cloudinary'
+import { bestImage, generateCaption, textOverlayImage } from '@/lib/cloudinary'
 import { generateStory } from '@/lib/openai'
 import prisma from '@/lib/prisma'
 import { StoryTellerSchema } from '@/schemas/storyteller'
@@ -66,31 +66,52 @@ export async function POST(request: Request) {
 			)
 		}
 
-		// generate story text
+		console.log(responseCaptionWithDescription, 'RESPONSE CAPTION')
+
+		// generate story text from open ai
 		const generateStoryText = await generateStory(
 			responseCaptionWithDescription,
 			theme,
 		)
 
+		// falta incorporar la parte de las redes sociales cortando la imagen por dimensiones
+		// TODO: add social medias
+
+		console.log(generateStoryText, 'RESPONSE STORY')
+
 		// add text to the first image
 		const newImageWithText = await textOverlayImage(
 			validImageResults[0].path,
+			// 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1729116443/hbclomk1azwdp1optstm.png',
 			generateStoryText,
+			description,
 		)
 
-		// const updateImage = await prisma.userImageResult.update({
-		// 	where: {
-		// 		id: validImageResults[0].id,
-		// 	},
-		// 	data: {
+		// best image with cloudinary restore from url
+		const bestNewImageWithText = await bestImage(newImageWithText.secure_url)
 
-    //   },
-		// })
+		// update image with new caption
+		const updateImage = await prisma.userImageResult.update({
+			where: {
+				id: validImageResults[0].id,
+			},
+			data: {
+				captionGenerated: generateStoryText,
+				// socialPosts: {
+				//   create: {
+				//     descriptionPromt: description,
+				//     descriptionResult: generateStoryText,
+
+				//   }
+				// }
+			},
+		})
 
 		return NextResponse.json(
 			{
-				newImageWithText: newImageWithText.secure_url,
-				imagesId,
+				newImage: updateImage,
+				url: newImageWithText.secure_url,
+				urlBest: bestNewImageWithText,
 			},
 			{ status: 200 },
 		)

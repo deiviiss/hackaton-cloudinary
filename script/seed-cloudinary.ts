@@ -90,6 +90,19 @@ async function main() {
 			},
 		})
 
+		await prisma.userImage.create({
+			data: {
+				userId: userCreated.id,
+				path: 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1729115483/nibhfnjxp8gnjhuh7t6v.webp',
+				userImageResults: {
+					create: {
+						path: 'https://res.cloudinary.com/generative-ai-demos/image/upload/e_gen_background_replace:prompt_tematica%20de%20halloween/f_auto/q_auto/bgr/ykrroxx3qc8nrdjusfs4.jpg',
+						prompt: 'Temática de Halloween',
+					},
+				},
+			},
+		})
+
 		console.log('Seeded successfully')
 	} catch (err) {
 		console.error('Error deleting records or creating users:', err)
