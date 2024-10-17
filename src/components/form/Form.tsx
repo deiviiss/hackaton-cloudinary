@@ -93,6 +93,15 @@ function MainForm() {
 	const setData = useImageStore((state) => state.setData)
 
 	const onDrop = (acceptedFiles: any) => {
+		if (acceptedFiles[0].size >= 10000000) {
+			setImageError(
+				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
+			)
+			errorToast(
+				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
+			)
+			return
+		}
 		if (acceptedFiles.length > 1) {
 			setImageError('Solo puedes seleccionar 1 imagen')
 			errorToast('Solo puedes seleccionar 1 imagen')
