@@ -95,10 +95,10 @@ function MainForm() {
 	const onDrop = (acceptedFiles: any) => {
 		if (acceptedFiles[0].size >= 10000000) {
 			setImageError(
-				`Maximo 10 MB, Tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
+				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
 			)
 			errorToast(
-				`Maximo 10 MB, Tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
+				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
 			)
 			return
 		}
