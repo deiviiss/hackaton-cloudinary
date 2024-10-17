@@ -34,7 +34,6 @@ async function main() {
 				userImageId: userImageCreated.id,
 				path: 'https://thumbs.dreamstime.com/z/flaming-running-shoes-pumpkins-dark-background-halloween-concept-generative-ai-animal-ai-flaming-running-shoes-pumpkins-286823361.jpg?ct=jpeg',
 				prompt: 'Un part de zapatillas en llamas para halloween',
-			
 			},
 		})
 
@@ -43,12 +42,14 @@ async function main() {
 				name: 'Tiktok',
 			},
 		})
-		
+
 		await prisma.socialPost.create({
 			data: {
 				userImageResultId: userImageResultCreated.id,
-				descriptionPromt: 'Un par de zapatillas en llamas para halloween con calabazas y fuego en el fondo',
-				descriptionResult: 'Disfruta de un part de zapatillas en llamas para halloween con calabazas y fuego en el fondo',
+				descriptionPromt:
+					'Un par de zapatillas en llamas para halloween con calabazas y fuego en el fondo',
+				descriptionResult:
+					'Disfruta de un part de zapatillas en llamas para halloween con calabazas y fuego en el fondo',
 				socialMediaId: socialMediaCreated.id,
 			},
 		})
@@ -61,7 +62,48 @@ async function main() {
 				socialMediaId: socialMediaCreated.id,
 			},
 		})
-		
+
+		await prisma.userImage.create({
+			data: {
+				userId: userCreated.id,
+				path: 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1728661439/f7lp7fyqr6motwuwigdq.jpg',
+				userImageResults: {
+					create: {
+						path: 'https://res.cloudinary.com/generative-ai-demos/image/upload/e_gen_background_replace:prompt_fondo%20modo%20halloween%20con%20zoombies/f_auto/q_auto/bgr/y2uit8dudkxipu4c5i32.jpg',
+						prompt: 'Fondo modo halloween con zoombies',
+					},
+				},
+			},
+		})
+
+		await prisma.userImage.create({
+			data: {
+				userId: userCreated.id,
+				path: 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1728660789/ox6bzzdwexyqbzakyp2y.jpg',
+				userImageResults: {
+					create: {
+						path: 'https://res.cloudinary.com/generative-ai-demos/image/upload/e_gen_background_replace:prompt_Una%20casa%20con%20dise%C3%B1o%20halloween%20con%20calaveras%20draculas%20fantasmas%20brujas%20y%20mas/f_auto/q_auto/bgr/s2ihhnon50qxgerttzwi.jpg',
+						prompt:
+							'Una casa con diseño halloween con calaveras draculas fantasmas brujas y mass',
+					},
+				},
+			},
+		})
+
+		await prisma.userImage.create({
+			data: {
+				userId: userCreated.id,
+				path: 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1729115483/nibhfnjxp8gnjhuh7t6v.webp',
+				userImageResults: {
+					create: {
+						path: 'https://res.cloudinary.com/generative-ai-demos/image/upload/e_gen_background_replace:prompt_tematica%20de%20halloween/f_auto/q_auto/bgr/ykrroxx3qc8nrdjusfs4.jpg',
+						prompt: 'Temática de Halloween',
+					},
+				},
+			},
+		})
+
+		console.log('Seeded successfully')
 	} catch (err) {
 		console.error('Error deleting records or creating users:', err)
 		process.exit(1)
