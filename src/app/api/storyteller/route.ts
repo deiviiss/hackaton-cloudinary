@@ -9,32 +9,34 @@ import { StoryTellerSchema } from '@/schemas/storyteller'
 export async function POST(request: Request) {
 	start('storyteller')
 	try {
-		const { imagesId, theme, description } = StoryTellerSchema.parse(
+		const { imagesUrl, theme, description } = StoryTellerSchema.parse(
 			await request.json(),
 		)
 
 		// promised images from prisma
-		const promisedImageResult = imagesId.map((id) =>
-			prisma.userImageResult.findUnique({ where: { id } }),
-		)
+		// const promisedImageResult = imagesId.map((id) =>
+		// 	prisma.userImageResult.findUnique({ where: { id } }),
+		// )
 
-		const arrayImageResult = await Promise.all(promisedImageResult)
+		// const arrayImageResult = await Promise.all(promisedImageResult)
 
-		// filter results that are null
-		const validImageResults = arrayImageResult.filter(
-			(imageResult) => imageResult !== null,
-		)
+		// // filter results that are null
+		// const validImageResults = arrayImageResult.filter(
+		// 	(imageResult) => imageResult !== null,
+		// )
 
-		if (!validImageResults.length) {
-			return NextResponse.json(
-				{ error: 'No se han encontrado imágenes' },
-				{ status: 400 },
-			)
-		}
+		// if (!validImageResults.length) {
+		// 	return NextResponse.json(
+		// 		{ error: 'No se han encontrado imágenes' },
+		// 		{ status: 400 },
+		// 	)
+		// }
+
+		const validImageResults = [imagesUrl]
 
 		// generate captions for each image
 		const promisedGenerateCaption = validImageResults.map((imageResult) =>
-			generateCaption(imageResult.path),
+			generateCaption(imageResult),
 		)
 
 		const arrayGenerateCaption = await Promise.all(promisedGenerateCaption)
@@ -81,7 +83,8 @@ export async function POST(request: Request) {
 
 		// add text to the first image
 		const newImageWithText = await textOverlayImage(
-			validImageResults[0].path,
+			// validImageResults[0].path,
+			validImageResults[0],
 			// 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1729116443/hbclomk1azwdp1optstm.png',
 			generateStoryText,
 			description,
@@ -91,26 +94,26 @@ export async function POST(request: Request) {
 		const bestNewImageWithText = await bestImage(newImageWithText.secure_url)
 
 		// update image with new caption
-		const updateImage = await prisma.userImageResult.update({
-			where: {
-				id: validImageResults[0].id,
-			},
-			data: {
-				captionGenerated: generateStoryText,
-				// socialPosts: {
-				//   create: {
-				//     descriptionPromt: description,
-				//     descriptionResult: generateStoryText,
+		// const updateImage = await prisma.userImageResult.update({
+		// 	where: {
+		// 		id: validImageResults[0].id,
+		// 	},
+		// 	data: {
+		// 		captionGenerated: generateStoryText,
+		// 		// socialPosts: {
+		// 		//   create: {
+		// 		//     descriptionPromt: description,
+		// 		//     descriptionResult: generateStoryText,
 
-				//   }
-				// }
-			},
-		})
+		// 		//   }
+		// 		// }
+		// 	},
+		// })
 
 		return NextResponse.json(
 			{
-				newImage: updateImage,
-				url: newImageWithText.secure_url,
+				// newImage: updateImage,
+				// url: newImageWithText.secure_url,
 				urlBest: bestNewImageWithText,
 			},
 			{ status: 200 },

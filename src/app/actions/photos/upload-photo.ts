@@ -11,6 +11,8 @@ export const uploadPhoto = async (formData: FormData) => {
 
 		const responseData = await response.json()
 		const { url, description, imageId, theme } = responseData
+
+		// ruta anterior como ejemplo para cambiar el background
 		const updateBackgroundResponse = await fetch('/api/photos/modify', {
 			method: 'POST',
 			body: JSON.stringify({
@@ -25,9 +27,28 @@ export const uploadPhoto = async (formData: FormData) => {
 		}
 		const updateData = await updateBackgroundResponse.json()
 
+		// storyteller lgdev
+		const imageResult = await (
+			await fetch('/api/storyteller', {
+				method: 'POST',
+				body: JSON.stringify({
+					theme,
+					description,
+					imagesUrl: updateData.updatedBgResult,
+				}),
+			})
+		).json()
+
 		return {
 			ok: true,
-			data: { ...updateData, theme },
+			// data: { ...updateData, theme },
+			data: {
+				imageId,
+				imageUrl: url,
+				description,
+				updatedBgResult: imageResult.urlBest,
+				theme,
+			},
 		}
 	} catch (error) {
 		return {
