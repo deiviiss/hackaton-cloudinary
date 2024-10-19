@@ -2,7 +2,7 @@
 'use client'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { Check, ChevronsUpDown } from 'lucide-react'
+import { Check, ChevronsUpDown, LoaderCircle, Trash2 } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 import { ChangeEvent, useState } from 'react'
 import { useDropzone } from 'react-dropzone'
@@ -35,39 +35,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { useImageStore } from '@/lib/store/images'
 import { cn } from '@/lib/utils'
 
-import Facebook from '../icons/Facebook'
-import Instagram from '../icons/Instalgram'
-import TikTok from '../icons/TikTok'
-import Twitter from '../icons/Twitter'
 import Footer from '../landing/Footer'
 
 const themes = [
 	{
 		value: 'halloween',
-		label: 'Halloween',
+		label: 'Halloween 🎃',
 	},
 	{
 		value: 'navidad',
-		label: 'Navidad',
-	},
-]
-
-const socialButtons = [
-	{
-		social: 'facebook',
-		Icon: Facebook,
-	},
-	{
-		social: 'instagram',
-		Icon: Instagram,
-	},
-	{
-		social: 'tikTok',
-		Icon: TikTok,
-	},
-	{
-		social: 'x',
-		Icon: Twitter,
+		label: 'Navidad 🎄',
 	},
 ]
 
@@ -83,11 +60,10 @@ const formSchema = z.object({
 
 function MainForm() {
 	const [open, setOpen] = useState(false)
-	const [themeSelected, setThemeSelected] = useState('')
+	const [themeSelected, setThemeSelected] = useState(themes[0].value)
 	const [imageError, setImageError] = useState<string | null>(null)
 	const [files, setFiles] = useState<File[]>([])
-	const [socialMediaCheck, setSocialMediaCheck] = useState(false)
-	const [socialSelected, setSocialSelected] = useState('')
+
 	const [isLoading, setIsLoading] = useState(false)
 	const router = useRouter()
 	const setData = useImageStore((state) => state.setData)
@@ -95,10 +71,10 @@ function MainForm() {
 	const onDrop = (acceptedFiles: any) => {
 		if (acceptedFiles[0].size >= 10000000) {
 			setImageError(
-				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
+				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}MB`,
 			)
 			errorToast(
-				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}`,
+				`Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}MB`,
 			)
 			return
 		}
@@ -112,7 +88,7 @@ function MainForm() {
 		}
 	}
 
-	const { getRootProps, getInputProps } = useDropzone({
+	const { getRootProps, getInputProps, isDragActive } = useDropzone({
 		onDrop,
 		accept: {
 			'image/*': ['.jpeg', '.jpg', '.png', '.gif'],
@@ -133,13 +109,6 @@ function MainForm() {
 		},
 	})
 
-	const handleSMCheck = (e: ChangeEvent<HTMLInputElement>) => {
-		setSocialMediaCheck(e.target.checked)
-		if (!e.target.checked) {
-			setSocialSelected('')
-		}
-	}
-
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		if (files.length === 0) {
 			errorToast('Por favor selecciona al menos una imagen')
@@ -157,9 +126,9 @@ function MainForm() {
 			//   formData.append(`imagen-${index}`, file)
 			// })
 
-			// formData.forEach((value, key) => {
 			// 	console.log(key + ':', value)
 			// })
+			// formData.forEach((value, key) => {
 
 			setIsLoading(true)
 			const { ok, data } = await uploadPhoto(formData)
@@ -179,15 +148,21 @@ function MainForm() {
 
 	return (
 		<div className="w-full h-full flex flex-col">
-			<section className="w-full min-h-screen flex justify-center items-center">
+			<section className="w-full flex justify-center items-center mt-16">
 				<Form {...form}>
 					<form
 						onSubmit={form.handleSubmit(onSubmit)}
-						className="space-y-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 bg-[#2a1b32] m-1 md:m-0 rounded-md"
+						className="w-full max-w-4xl px-5"
 					>
 						{/* DROPZONE */}
 						{files.length > 0 ? (
-							<section className="grid grid-cols-1 place-items-center gap-1">
+							<section
+								className={cn(
+									'flex flex-wrap items-center bg-white/10 rounded-lg p-5 min-h-[220px] border-[3px] border-transparent',
+									themeSelected === 'halloween' && 'bg-orange-500/5',
+									themeSelected === 'navidad' && 'bg-green-500/5',
+								)}
+							>
 								{files.map((file, index) => (
 									<div
 										key={index}
@@ -196,37 +171,64 @@ function MainForm() {
 										<img
 											src={URL.createObjectURL(file)}
 											alt={`upload-preview-${index}`}
-											className="h-48 w-full object-cover rounded-lg shadow-md shadow-black"
+											className="h-[170px] w-auto object-contain rounded-lg shadow-md shadow-black"
 										/>
 										<button
 											type="button"
 											onClick={() => removeFile(index)}
-											className="bg-red-500 text-white rounded-full absolute top-1 right-1 px-2 py-1 hover:scale-110"
+											className="bg-rose-500 border-2 border-red-500 hover:bg-rose-600 text-white size-10 grid place-items-center rounded-full absolute -top-3 -right-3 hover:scale-110 transition-all duration-150 ease-linear"
 										>
-											&#10005;
+											<Trash2 className="size-5" />
 										</button>
 									</div>
 								))}
 							</section>
 						) : (
-							<div {...getRootProps()} className="image-dropzone">
+							<div
+								{...getRootProps()}
+								className={cn(
+									'border-[3px] rounded-lg border-dashed border-white/30 opacity-70 transition duration-200 ease-in bg-white/5',
+									'hover:opacity-100 hover:border-white/50 min-h-[220px] flex justify-center items-center group',
+									isDragActive && 'opacity-100 bg-white/10 border-white/50',
+								)}
+							>
 								<input {...getInputProps()} className="hidden" />
 								<FormLabel
 									htmlFor="file-upload"
-									className="py-7 text-neutral-300 flex flex-col gap-y-2 text-center"
+									className="text-neutral-300 flex flex-col gap-y-2 text-center"
 								>
-									<span className="text-xl">Sube o arrastra tu imagen</span>
-									<span className="text-sm">Max. 1 imagen</span>
+									<div className="flex justify-center items-center flex-col">
+										<img
+											src="https://cdn-icons-png.flaticon.com/128/4131/4131883.png"
+											className={cn(
+												'w-24 h-auto group-hover:scale-110 transition-all duration-150 group-hover:rotate-6',
+												isDragActive && 'rotate-6 scale-110',
+											)}
+											alt="icon"
+										/>
+										<span className="text-2xl font-semibold">
+											Sube o arrastra tu imagen
+										</span>
+										<span className="text-base">Max. 1 imagen</span>
+									</div>
 								</FormLabel>
 							</div>
 						)}
 						{imageError && (
-							<span className="text-red-500 text-center">{imageError}</span>
+							<span className="text-red-500 !mt-3 block w-full text-start">
+								{imageError}
+							</span>
 						)}
 
 						{/* THEME */}
-						<section className="w-full flex gap-x-3 items-center justify-center">
-							<div className="flex-1 text-center">
+						<section className="w-full flex gap-x-3 items-center justify-center mb-8 mt-10 relative">
+							{themeSelected === 'navidad' && (
+								<div className="absolute opacity-40 text-sm -bottom-7 right-0">
+									La temporada actual es de{' '}
+									<span className="font-semibold">Halloween</span>{' '}
+								</div>
+							)}
+							<div className="text-lg">
 								<span>Selecciona un tema</span>
 							</div>
 							<Popover open={open} onOpenChange={setOpen}>
@@ -236,7 +238,11 @@ function MainForm() {
 										variant="outline"
 										role="combobox"
 										aria-expanded={open}
-										className="w-full flex-1 justify-between"
+										className={cn(
+											'w-full flex-1 justify-between text-lg border border-transparent',
+											themeSelected === 'halloween' && 'border-orange-500',
+											themeSelected === 'navidad' && 'border-green-500',
+										)}
 									>
 										{themeSelected
 											? themes.find((theme) => theme.value === themeSelected)
@@ -280,49 +286,13 @@ function MainForm() {
 							</Popover>
 						</section>
 
-						{/* SOCIAL MEDIA */}
-						<div className="flex items-center justify-center space-x-2">
-							<input
-								id="social_media"
-								type="checkbox"
-								className={cn({
-									'accent-orange-500': themeSelected == 'halloween',
-									'accent-green-500': themeSelected == 'navidad',
-								})}
-								onChange={handleSMCheck}
-								checked={socialMediaCheck}
-							/>
-							<label
-								htmlFor="social_media"
-								className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
-							>
-								Contenido para redes sociales
-							</label>
-						</div>
-
-						{socialMediaCheck && (
-							<div className="flex items-center justify-around gap-x-2">
-								{socialButtons.map(({ social, Icon }, index) => (
-									<button
-										key={index}
-										type="button"
-										title={social}
-										onClick={() => {
-											setSocialSelected(social)
-										}}
-										className={cn('hover:bg-[#180e21] p-2 rounded-md', {
-											'bg-[#180e21] border': socialSelected === social,
-											'border-orange-500': themeSelected === 'halloween',
-											'border-green-500': themeSelected === 'navidad',
-										})}
-									>
-										<Icon className="size-8" />
-									</button>
-								))}
-							</div>
-						)}
-
 						{/* DESCRIPTION */}
+						<label
+							htmlFor=""
+							className="text-lg inline-block mb-2 text-white/80"
+						>
+							Agrega una descripción extra para trasnformar tu imagen
+						</label>
 						<FormField
 							control={form.control}
 							name="description"
@@ -330,33 +300,40 @@ function MainForm() {
 								<FormItem>
 									<FormControl>
 										<Textarea
-											placeholder="Descripción..."
+											placeholder="Ej: Fantasmas alrededor"
 											className={cn(
-												'resize-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none',
+												'resize-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none text-lg',
 												{
 													'border border-orange-500':
-														themeSelected === 'halloween',
+														themeSelected === 'halloween' && files.length > 0,
 													'border border-green-500':
-														themeSelected === 'navidad',
+														themeSelected === 'navidad' && files.length > 0,
 												},
 											)}
 											{...field}
 										/>
 									</FormControl>
-									<FormMessage />
+									<FormMessage className="text-red-500 text-base" />
 								</FormItem>
 							)}
 						/>
 
 						<button
 							type="submit"
-							disabled={isLoading}
-							className={cn('default-button', {
-								'halloween-button': themeSelected === 'halloween',
-								'navidad-button': themeSelected === 'navidad',
-							})}
+							disabled={isLoading || files.length <= 0}
+							className={cn(
+								'default-button mt-10 flex items-center justify-center gap-2',
+								{
+									'halloween-button':
+										themeSelected === 'halloween' && files.length > 0,
+									'navidad-button':
+										themeSelected === 'navidad' && files.length > 0,
+								},
+								'disabled:opacity-50 disabled:pointer-events-none',
+							)}
 						>
 							{isLoading ? 'Cargando...' : 'Generar imagen'}
+							{isLoading && <LoaderCircle className="size-5 animate-spin" />}
 						</button>
 					</form>
 				</Form>
