@@ -26,7 +26,6 @@ export async function generateStory(content: string, theme: THEMA) {
 
 		return response.choices[0].message.content
 	} catch (error) {
-		console.error(error)
 		throw new Error(`Error generating text with OpenAI: ${error}`)
 	}
 }

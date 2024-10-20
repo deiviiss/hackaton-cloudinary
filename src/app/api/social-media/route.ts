@@ -13,12 +13,8 @@ export async function POST(request: Request) {
 
 		const socialMediaUrl = await generateSocialMediaUrl(imageUrl, socialMedia)
 
-		console.log(typeof socialMediaUrl)
-
 		return NextResponse.json(socialMediaUrl, { status: 200 })
 	} catch (error: unknown) {
-		// eslint-disable-next-line no-console
-		console.error('Error in POST socialMedia', error)
 		return NextResponse.json(
 			{ error: 'An error occurred in socialMedia' },
 			{ status: 500 },

@@ -73,18 +73,6 @@ export const textOverlayImage = async (
 				y: 10, // Ajustar la posición vertical (opcional, puedes cambiar este valor)
 			},
 
-			// para el order now
-			// {
-			// 	overlay: overlayImageId2, // Superponer la imagen
-			// 	aspect_ratio: '4:1',
-			// 	width: 500, // Aumentar el tamaño de la imagen superpuesta
-			// 	// height: 300, // Aumentar el tamaño de la imagen superpuesta
-			// 	crop: 'fit',
-			// 	gravity: 'east', // Colocar la imagen en la esquina superior derecha
-			// 	x: 10, // Ajustar la posición horizontal (opcional, puedes cambiar este valor)
-			// 	y: 10, // Ajustar la posición vertical (opcional, puedes cambiar este valor)
-			// },
-
 			// texto para el discount
 			{
 				overlay: {
@@ -143,7 +131,6 @@ function applyTransformationToUrl(
 ): string {
 	// add best but image opacity -> e_enhance
 	// const transformation = 'e_gen_restore/e_enhance/f_auto/q_auto' //! Default transformation ensures compatibility with existing uses of the function
-	// const transformation = 'e_gen_restore/f_auto/q_auto'
 
 	// Split the URL into two parts: before and after "/upload/"
 	const urlParts = imageUrl.split('/upload/')
@@ -158,24 +145,11 @@ export const bestImage = async (imageUrl: string) => {
 	if (imageUrl.startsWith('https://res.cloudinary.com')) {
 		imageUrl = applyTransformationToUrl(imageUrl)
 	} else {
-		console.log('Error en la mejora de la imagen')
+		throw new Error('Invalid Cloudinary URL')
 	}
 
 	return imageUrl
 }
-
-// https://cloudinary.com/documentation/transformation_overlays_tutorial#banner
-
-// cloudinary.image("docs/family-beach.png", {transformation: [
-//   {effect: "gen_remove:prompt_tail"},
-//   {aspect_ratio: "2:3", gravity: "auto", width: 500, crop: "fill"},
-//   {effect: "grayscale"},
-//   {border: "15px_solid_brown", radius: 30},
-//   {background: "black"},
-//   {color: "brown", overlay: {font_family: "vibes", font_size: 52, text: "Wish%20you%20were%20here..."}},
-//   {flags: "layer_apply", gravity: "north", y: 60},
-//   {angle: -5}
-//   ]})
 
 // Define the transformation rules for each social media platform
 const socialMediaImageSettings: Record<SocialMedia, () => string> = {
@@ -210,19 +184,3 @@ export {
 	updateBackgroundImage,
 	generateSocialMediaUrl,
 }
-
-// {
-// 	overlay: {
-// 		font_family: 'Lobster', // Fuente más atractiva para marketing
-// 		font_size: 60, // Tamaño ajustado para evitar desbordamiento
-// 		font_weight: 'bold',
-// 		text,
-// 	},
-// 	color: '#FF5733', // Color vibrante para el texto
-// 	gravity: 'south', // Posición del texto en la parte inferior
-// 	y: 20, // Ajuste vertical para separarlo del borde
-// 	width: 1500, // Ancho máximo para que el texto no se desborde
-// 	crop: 'fit', // Ajusta el texto dentro del ancho especificado
-// 	background: '#000000AA', // Fondo negro semitransparente para mejorar visibilidad
-// 	// border: '5px_solid_rgb:FFFFFF', // Bord
-// },

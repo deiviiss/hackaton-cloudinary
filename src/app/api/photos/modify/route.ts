@@ -28,7 +28,6 @@ export async function POST(request: Request) {
 
 		return NextResponse.json(respose, { status: 200 })
 	} catch (error: unknown) {
-		console.error('Error in POST /api/v1/upload:', error)
 		return NextResponse.json({ error: 'An error occurred' }, { status: 500 })
 	}
 }
