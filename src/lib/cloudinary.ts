@@ -1,5 +1,4 @@
 import { v2 as cloudinary } from 'cloudinary'
-import fs from 'fs'
 
 import { SocialMedia } from '@/types/api/photo'
 
@@ -10,16 +9,22 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
-const uploadImageToCloudinary = async (image: string) => {
+const uploadImageToCloudinary = async (image: File) => {
 	try {
-		const uploadResponse = await cloudinary.uploader.upload(image, {
-			folder: 'hackathon',
-		})
+		// Convert the image to a buffer
+		const buffer = await image.arrayBuffer()
+		const base64Image = Buffer.from(buffer).toString('base64')
 
-		fs.unlinkSync(image)
+		// Upload the image to Cloudinary
+		const uploadResponse = await cloudinary.uploader.upload(
+			`data:image/png;base64,${base64Image}`,
+			{
+				folder: 'hackathon',
+			},
+		)
+
 		return uploadResponse
 	} catch (error) {
-		fs.unlinkSync(image)
 		throw new Error('Error uploading image to Cloudinary')
 	}
 }
