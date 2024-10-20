@@ -47,7 +47,7 @@ const themes = [
     label: 'Halloween',
   },
   {
-    value: 'navidad',
+    value: 'christmas',
     label: 'Navidad',
   },
 ]
@@ -183,7 +183,7 @@ function MainForm() {
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
-            className="space-y-8 w-full md:w-1/2 lg:w-1/3 xl:w-1/4 p-2 bg-[#2a1b32] m-1 md:m-0 rounded-md"
+            className="space-y-8 w-full sm:w-1/2 lg:w-2/4 p-2 sm:p-4 bg-[#2a1b32] m-1 md:m-0 rounded-md"
           >
             {/* DROPZONE */}
             {files.length > 0 ? (
@@ -226,8 +226,8 @@ function MainForm() {
 
             {/* THEME */}
             <section className="w-full flex gap-x-3 items-center justify-center">
-              <div className="flex-1 text-center">
-                <span>Selecciona un tema</span>
+              <div className="flex-1">
+                <span>Elige una temática para tu imagen</span>
               </div>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -236,12 +236,12 @@ function MainForm() {
                     variant="outline"
                     role="combobox"
                     aria-expanded={open}
-                    className="w-full flex-1 justify-between"
+                    className="w-1/3 justify-between"
                   >
                     {themeSelected
                       ? themes.find((theme) => theme.value === themeSelected)
                         ?.label
-                      : 'Selecciona una tematica'}
+                      : 'Temáticas'}
                     <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                   </Button>
                 </PopoverTrigger>
@@ -287,7 +287,7 @@ function MainForm() {
                 type="checkbox"
                 className={cn({
                   'accent-orange-500': themeSelected == 'halloween',
-                  'accent-green-500': themeSelected == 'navidad',
+                  'accent-green-500': themeSelected == 'christmas',
                 })}
                 onChange={handleSMCheck}
                 checked={socialMediaCheck}
@@ -313,7 +313,7 @@ function MainForm() {
                     className={cn('hover:bg-[#180e21] p-2 rounded-md', {
                       'bg-[#180e21] border': socialSelected === social,
                       'border-orange-500': themeSelected === 'halloween',
-                      'border-green-500': themeSelected === 'navidad',
+                      'border-green-500': themeSelected === 'christmas',
                     })}
                   >
                     <Icon className="size-8" />
@@ -330,14 +330,14 @@ function MainForm() {
                 <FormItem>
                   <FormControl>
                     <Textarea
-                      placeholder="Descripción..."
+                      placeholder="20% de descuento, 2X1, producto gratis..."
                       className={cn(
                         'resize-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none',
                         {
                           'border border-orange-500':
                             themeSelected === 'halloween',
                           'border border-green-500':
-                            themeSelected === 'navidad',
+                            themeSelected === 'christmas',
                         },
                       )}
                       {...field}
@@ -353,7 +353,7 @@ function MainForm() {
               disabled={isLoading}
               className={cn('default-button', {
                 'halloween-button': themeSelected === 'halloween',
-                'navidad-button': themeSelected === 'navidad',
+                'navidad-button': themeSelected === 'christmas',
               })}
             >
               {isLoading ? 'Cargando...' : 'Generar imagen'}

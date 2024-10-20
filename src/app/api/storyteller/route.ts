@@ -27,6 +27,7 @@ export async function POST(request: Request) {
 			imagesUrl,
 			generateStoryText,
 			description,
+			theme,
 		)
 
 		// best image with cloudinary restore from url
