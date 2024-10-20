@@ -1,6 +1,8 @@
 import { v2 as cloudinary } from 'cloudinary'
 import fs from 'fs'
 
+import { SocialMedia } from '@/types/api/photo'
+
 // Configuración de Cloudinary
 cloudinary.config({
 	cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
@@ -135,17 +137,18 @@ export const textOverlayImage = async (
 }
 
 // function best image with cloudinary restore from url
-function applyTransformationToUrl(imageUrl: string) {
-	// Transformaciones a aplicar (puedes cambiar esto si es necesario)
-
+function applyTransformationToUrl(
+	imageUrl: string,
+	transformation: string = 'e_gen_restore/e_enhance/f_auto/q_auto',
+): string {
 	// add best but image opacity -> e_enhance
-	const transformation = 'e_gen_restore/e_enhance/f_auto/q_auto'
+	// const transformation = 'e_gen_restore/e_enhance/f_auto/q_auto' //! Default transformation ensures compatibility with existing uses of the function
 	// const transformation = 'e_gen_restore/f_auto/q_auto'
 
-	// Dividir la URL en dos partes: antes y después de "/upload/"
+	// Split the URL into two parts: before and after "/upload/"
 	const urlParts = imageUrl.split('/upload/')
 
-	// Insertar las transformaciones entre "/upload/" y el resto de la URL
+	// Insert the transformations between "/upload/" and the rest of the URL
 	const transformedUrl = `${urlParts[0]}/upload/${transformation}/${urlParts[1]}`
 
 	return transformedUrl
@@ -174,7 +177,39 @@ export const bestImage = async (imageUrl: string) => {
 //   {angle: -5}
 //   ]})
 
-export { cloudinary, uploadImageToCloudinary, updateBackgroundImage }
+// Define the transformation rules for each social media platform
+const socialMediaImageSettings: Record<SocialMedia, () => string> = {
+	instagram: () => 'w_1080,h_1080,c_fill', // Square format for Instagram
+	facebook: () => 'w_820,h_312,c_fill,g_auto', // Banner format for Facebook
+	tiktok: () => 'w_1080,h_1920,c_fill,g_auto', // Vertical format 1080x1920 for TikTok
+	x: () => 'w_1200,h_675,c_fill,g_auto', // Horizontal format for X (formerly Twitter)
+	default: () => 'w_800,h_800,c_fit', // Default format if no social media is specified
+}
+
+// Function to get the best image URL for a social media platform
+const generateSocialMediaUrl = async (
+	imageUrl: string,
+	socialMedia: SocialMedia,
+): Promise<string> => {
+	if (!imageUrl.startsWith('https://res.cloudinary.com')) {
+		throw new Error('Invalid Cloudinary URL')
+	}
+
+	// Get the appropriate transformation or use the default one
+	const transformation = (
+		socialMediaImageSettings[socialMedia] || socialMediaImageSettings['default']
+	)()
+
+	// Apply the transformation to the URL
+	return applyTransformationToUrl(imageUrl, transformation)
+}
+
+export {
+	cloudinary,
+	uploadImageToCloudinary,
+	updateBackgroundImage,
+	generateSocialMediaUrl,
+}
 
 // {
 // 	overlay: {

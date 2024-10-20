@@ -13,4 +13,7 @@ interface FormOutputData {
 	description: string
 }
 
-export type { FormInputData, FormOutputData }
+// Define the type for social media platforms
+type SocialMedia = 'instagram' | 'facebook' | 'tiktok' | 'x' | 'default'
+
+export type { FormInputData, FormOutputData, SocialMedia }
