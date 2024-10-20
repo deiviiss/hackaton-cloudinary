@@ -4,7 +4,7 @@ import Image from 'next/image'
 
 const Footer = () => {
 	return (
-		<footer className="p-5 bg-purple-600/10 md:mt-40 mt-56 text-center md:space-y-5 space-y-8 relative pb-10">
+		<footer className="p-5 bg-purple-600/10 md:mt-40 mt-56 text-center md:space-y-5 space-y-8 relative pb-10 pt-0">
 			<div
 				style={{ clipPath: 'polygon(100% 0, 0% 100%, 100% 100%)' }}
 				className="bg-inherit w-full h-[80px] z-10 absolute -top-[80px] left-0 "
