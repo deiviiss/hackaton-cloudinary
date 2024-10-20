@@ -10,6 +10,10 @@ import { useForm } from 'react-hook-form'
 import { z } from 'zod'
 
 import { uploadPhoto } from '@/app/actions/photos/upload-photo'
+import Facebook from '@/components/icons/Facebook'
+import Instagram from '@/components/icons/Instalgram'
+import TikTok from '@/components/icons/TikTok'
+import Twitter from '@/components/icons/Twitter'
 import { errorToast, successToast } from '@/components/Toasts'
 import { Button } from '@/components/ui/button'
 import {
@@ -48,6 +52,25 @@ const themes = [
 	},
 ]
 
+const socialButtons = [
+	{
+		social: 'facebook',
+		Icon: Facebook,
+	},
+	{
+		social: 'instagram',
+		Icon: Instagram,
+	},
+	{
+		social: 'tikTok',
+		Icon: TikTok,
+	},
+	{
+		social: 'x',
+		Icon: Twitter,
+	},
+]
+
 const formSchema = z.object({
 	images: z.any(),
 	description: z
@@ -63,7 +86,8 @@ function MainForm() {
 	const [themeSelected, setThemeSelected] = useState(themes[0].value)
 	const [imageError, setImageError] = useState<string | null>(null)
 	const [files, setFiles] = useState<File[]>([])
-
+	const [socialMediaCheck, setSocialMediaCheck] = useState(false)
+	const [socialSelected, setSocialSelected] = useState('')
 	const [isLoading, setIsLoading] = useState(false)
 	const router = useRouter()
 	const setData = useImageStore((state) => state.setData)
@@ -109,6 +133,13 @@ function MainForm() {
 		},
 	})
 
+	const handleSMCheck = (e: ChangeEvent<HTMLInputElement>) => {
+		setSocialMediaCheck(e.target.checked)
+		if (!e.target.checked) {
+			setSocialSelected('')
+		}
+	}
+
 	async function onSubmit(values: z.infer<typeof formSchema>) {
 		if (files.length === 0) {
 			errorToast('Por favor selecciona al menos una imagen')
@@ -122,13 +153,14 @@ function MainForm() {
 			formData.append('description', values.description ?? '')
 			//! current api only accepts one image
 			formData.append('image', firstImage)
+			formData.append('social_media', socialSelected)
 			// files.forEach((file, index) => {
 			//   formData.append(`imagen-${index}`, file)
 			// })
 
+			// formData.forEach((value, key) => {
 			// 	console.log(key + ':', value)
 			// })
-			// formData.forEach((value, key) => {
 
 			setIsLoading(true)
 			const { ok, data } = await uploadPhoto(formData)
@@ -137,7 +169,6 @@ function MainForm() {
 				errorToast('Error al subir las imágenes')
 				setIsLoading(false)
 			} else {
-				console.log(data)
 				setIsLoading(false)
 				setData(data)
 				successToast('Imagen subida')
@@ -285,6 +316,48 @@ function MainForm() {
 								</PopoverContent>
 							</Popover>
 						</section>
+
+						{/* SOCIAL MEDIA */}
+						<div className="flex items-center justify-center space-x-2">
+							<input
+								id="social_media"
+								type="checkbox"
+								className={cn({
+									'accent-orange-500': themeSelected == 'halloween',
+									'accent-green-500': themeSelected == 'navidad',
+								})}
+								onChange={handleSMCheck}
+								checked={socialMediaCheck}
+							/>
+							<label
+								htmlFor="social_media"
+								className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+							>
+								Contenido para redes sociales
+							</label>
+						</div>
+
+						{socialMediaCheck && (
+							<div className="flex items-center justify-around gap-x-2">
+								{socialButtons.map(({ social, Icon }, index) => (
+									<button
+										key={index}
+										type="button"
+										title={social}
+										onClick={() => {
+											setSocialSelected(social)
+										}}
+										className={cn('hover:bg-[#180e21] p-2 rounded-md', {
+											'bg-[#180e21] border': socialSelected === social,
+											'border-orange-500': themeSelected === 'halloween',
+											'border-green-500': themeSelected === 'navidad',
+										})}
+									>
+										<Icon className="size-8" />
+									</button>
+								))}
+							</div>
+						)}
 
 						{/* DESCRIPTION */}
 						<label

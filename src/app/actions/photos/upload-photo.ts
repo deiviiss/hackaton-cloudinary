@@ -1,4 +1,6 @@
 export const uploadPhoto = async (formData: FormData) => {
+	const socialMedia = formData.get('social_media') as string
+
 	try {
 		const response = await fetch('/api/photos', {
 			method: 'POST',
@@ -27,6 +29,17 @@ export const uploadPhoto = async (formData: FormData) => {
 		}
 		const updateData = await updateBackgroundResponse.json()
 
+		// social media
+		const socialMediaResponse = await fetch('/api/social-media', {
+			method: 'POST',
+			body: JSON.stringify({
+				imageUrl: updateData.updatedBgResult,
+				socialMedia,
+			}),
+		})
+
+		const socialMediaUrl = await socialMediaResponse.json()
+
 		// storyteller lgdev
 		const imageResult = await (
 			await fetch('/api/storyteller', {
@@ -34,7 +47,7 @@ export const uploadPhoto = async (formData: FormData) => {
 				body: JSON.stringify({
 					theme,
 					description,
-					imagesUrl: updateData.updatedBgResult,
+					imagesUrl: socialMediaUrl,
 				}),
 			})
 		).json()
