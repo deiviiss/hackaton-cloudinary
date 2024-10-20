@@ -3,7 +3,6 @@ import { NextResponse } from 'next/server'
 import { end, start } from '@/helpers/performance'
 import { bestImage, generateCaption, textOverlayImage } from '@/lib/cloudinary'
 import { generateStory } from '@/lib/openai'
-import prisma from '@/lib/prisma'
 import { StoryTellerSchema } from '@/schemas/storyteller'
 
 export async function POST(request: Request) {
@@ -12,74 +11,10 @@ export async function POST(request: Request) {
 		const { imagesUrl, theme, description } = StoryTellerSchema.parse(
 			await request.json(),
 		)
-
-		// promised images from prisma
-		// const promisedImageResult = imagesId.map((id) =>
-		// 	prisma.userImageResult.findUnique({ where: { id } }),
-		// )
-
-		// const arrayImageResult = await Promise.all(promisedImageResult)
-
-		// // filter results that are null
-		// const validImageResults = arrayImageResult.filter(
-		// 	(imageResult) => imageResult !== null,
-		// )
-
-		// if (!validImageResults.length) {
-		// 	return NextResponse.json(
-		// 		{ error: 'No se han encontrado imágenes' },
-		// 		{ status: 400 },
-		// 	)
-		// }
-
-		console.log('INGRESO INICIAL')
-
-		// const validImageResults = [imagesUrl]
-
-		// generate captions for each image
-		// const promisedGenerateCaption = validImageResults.map((imageResult) =>
-		// 	generateCaption(imageResult),
-		// )
-
-		// const arrayGenerateCaption = await Promise.all(promisedGenerateCaption)
-
 		const promisedGenerateCaption = await generateCaption(imagesUrl)
-
-		console.log('SE GENERO EL CAPTION')
-
-		// const arrayGenerateCaption = [promisedGenerateCaption]
-
-		// get the captions in a single string, include the description from the request
-		// const responseCaptionWithDescription = arrayGenerateCaption
-		// 	.reduce(
-		// 		(acc, curr, index) => {
-		// 			const captionText =
-		// 				curr.info.detection.captioning.status === 'complete'
-		// 					? `${index + 2}. ${curr.info.detection.captioning.data.caption}\n`
-		// 					: ''
-
-		// 			return acc + captionText
-		// 		},
-		// 		description
-		// 			? `1. ${description.trim()}${description[description.length - 1] === '.' ? '' : '.'}\n`
-		// 			: '',
-		// 	)
-		// 	.trim()
-
-		// if (!responseCaptionWithDescription) {
-		// 	return NextResponse.json(
-		// 		{
-		// 			error:
-		// 				'No se ha generado ninguna descripción o no se ha realizado el generation captions de las imágenes',
-		// 		},
-		// 		{ status: 400 },
-		// 	)
-		// }
 
 		const responseCaptionWithDescription =
 			`1. ${description.trim()}${description[description.length - 1] === '.' ? '' : '.'}\n 2. ${promisedGenerateCaption.info.detection.captioning.data.caption}\n`.trim()
-
-		console.log(responseCaptionWithDescription, 'RESPONSE CAPTION')
 
 		// generate story text from open ai
 		const generateStoryText = await generateStory(
@@ -87,16 +22,9 @@ export async function POST(request: Request) {
 			theme,
 		)
 
-		// falta incorporar la parte de las redes sociales cortando la imagen por dimensiones
-		// TODO: add social medias
-
-		console.log(generateStoryText, 'RESPONSE STORY')
-
 		// add text to the first image
 		const newImageWithText = await textOverlayImage(
-			// validImageResults[0].path,
 			imagesUrl,
-			// 'https://res.cloudinary.com/dlixnwuhi/image/upload/v1729116443/hbclomk1azwdp1optstm.png',
 			generateStoryText,
 			description,
 		)
@@ -104,33 +32,8 @@ export async function POST(request: Request) {
 		// best image with cloudinary restore from url
 		const bestNewImageWithText = await bestImage(newImageWithText.secure_url)
 
-		// update image with new caption
-		// const updateImage = await prisma.userImageResult.update({
-		// 	where: {
-		// 		id: validImageResults[0].id,
-		// 	},
-		// 	data: {
-		// 		captionGenerated: generateStoryText,
-		// 		// socialPosts: {
-		// 		//   create: {
-		// 		//     descriptionPromt: description,
-		// 		//     descriptionResult: generateStoryText,
-
-		// 		//   }
-		// 		// }
-		// 	},
-		// })
-
-		return NextResponse.json(
-			{
-				// newImage: updateImage,
-				// url: newImageWithText.secure_url,
-				urlBest: bestNewImageWithText,
-			},
-			{ status: 200 },
-		)
+		return NextResponse.json({ urlBest: bestNewImageWithText }, { status: 200 })
 	} catch (error: unknown) {
-		console.error('Error in POST storyteller', error)
 		return NextResponse.json(
 			{ error: 'An error occurred in storyteller' },
 			{ status: 500 },
