@@ -52,19 +52,46 @@ export const generateCaption = async (image: string) => {
 	})
 }
 
+const themeStyles: Record<
+	string,
+	{
+		colorText: string
+		colorTextBackground: string
+		colorBackground: string
+		fontFamily: string
+	}
+> = {
+	halloween: {
+		colorText: '#FF4500', // Naranja brillante para Halloween
+		colorTextBackground: '#000000AA', // Fondo semitransparente negro
+		colorBackground: 'black', // Fondo de la imagen en negro
+		fontFamily: 'Creepster', // Fuente temática de Halloween
+	},
+	christmas: {
+		colorText: '#008000', // Verde festivo para Navidad
+		colorTextBackground: '#FFFFFFAA', // Fondo semitransparente blanco
+		colorBackground: '#FF0000', // Fondo rojo navideño
+		fontFamily: 'Merriweather', // Fuente temática navideña
+	},
+	default: {
+		colorText: '#FFFFFF', // Color de texto por defecto (blanco)
+		colorTextBackground: '#000000AA', // Fondo semitransparente negro
+		colorBackground: 'gray', // Fondo de la imagen en gris
+		fontFamily: 'Arial', // Fuente genérica
+	},
+}
+
 // text overlay image
 const overlayImageId = 'yhamjq0byfixtz4hx1sw' // Reemplaza por el public_id de tu imagen superpuesta
-const overlayImageId2 = 'phfjihhdg8izthis5peq'
-const colorText = '#FF4500'
-const colorTextBackground = '#000000AA'
-const colorBackground = 'black'
-const fontFamily = 'Creepster'
 
 export const textOverlayImage = async (
 	image: string,
 	text: string,
 	description: string,
+	theme: string = 'halloween',
 ) => {
+	const styles = themeStyles[theme] || themeStyles.default
+
 	return cloudinary.uploader.upload(image, {
 		transformation: [
 			// imagen de fondo para el description discount or other
@@ -81,7 +108,7 @@ export const textOverlayImage = async (
 			// texto para el discount
 			{
 				overlay: {
-					font_family: fontFamily, // Fuente temática de Halloween
+					font_family: styles.fontFamily, // Fuente temática de Halloween
 					font_size: 55,
 					font_weight: 'semibold',
 					text: description, // Texto que deseas agregar
@@ -100,7 +127,7 @@ export const textOverlayImage = async (
 			{
 				overlay: {
 					// font_family: 'Creepster', // Fuente temática de Halloween
-					font_family: fontFamily,
+					font_family: styles.fontFamily,
 					font_size: 35,
 					font_weight: 'semibold',
 					text_align: 'center', // Alineación centrada para el texto
@@ -110,13 +137,13 @@ export const textOverlayImage = async (
 					stroke: '5px_solid_white', // Borde negro de 5px alrededor del texto
 				},
 				// color: '#FFA500', // Naranja claro vibrante (Color de la calabaza)
-				color: colorText,
+				color: styles.colorText,
 				// color: 'white',
 				gravity: 'south', // Mantener el texto en la parte inferior
 				y: 20, // Ajuste vertical desde la parte inferior
 				width: 800, // Ancho máximo para evitar desbordamiento
 				crop: 'fit',
-				background: colorTextBackground,
+				background: styles.colorTextBackground,
 				// effect: 'shadow:50', // Sombra para darle profundidad y un toque espeluznante
 				// effect: 'grayscale',
 				// opacity: 80, // Ligera opacidad para integrarlo mejor en la imagen
@@ -124,7 +151,7 @@ export const textOverlayImage = async (
 			{ radius: 30 },
 			{ angle: -2.5 },
 			// { width: 1000 },
-			{ background: colorBackground },
+			{ background: styles.colorBackground },
 		],
 	})
 }
