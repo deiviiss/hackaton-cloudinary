@@ -39,6 +39,7 @@ import { Textarea } from '@/components/ui/textarea'
 import { useImageStore } from '@/lib/store/images'
 import { cn } from '@/lib/utils'
 
+import { ButtonHome } from '../ButtonHome'
 import Footer from '../landing/Footer'
 
 const themes = [
@@ -62,7 +63,7 @@ const socialButtons = [
     Icon: Instagram,
   },
   {
-    social: 'tikTok',
+    social: 'tiktok',
     Icon: TikTok,
   },
   {
@@ -83,10 +84,10 @@ const formSchema = z.object({
 
 function MainForm() {
   const [open, setOpen] = useState(false)
-  const [themeSelected, setThemeSelected] = useState(themes[0].value)
+  const [themeSelected, setThemeSelected] = useState('')
   const [imageError, setImageError] = useState<string | null>(null)
   const [files, setFiles] = useState<File[]>([])
-  const [socialMediaCheck, setSocialMediaCheck] = useState(false)
+  const [socialMediaCheck, setSocialMediaCheck] = useState(true)
   const [socialSelected, setSocialSelected] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
@@ -154,13 +155,6 @@ function MainForm() {
       //! current api only accepts one image
       formData.append('image', firstImage)
       formData.append('social_media', socialSelected)
-      // files.forEach((file, index) => {
-      //   formData.append(`imagen-${index}`, file)
-      // })
-
-      // formData.forEach((value, key) => {
-      // 	console.log(key + ':', value)
-      // })
 
       setIsLoading(true)
       const { ok, data } = await uploadPhoto(formData)
@@ -178,7 +172,10 @@ function MainForm() {
   }
 
   return (
-    <div className="w-full h-full flex flex-col">
+    <div className="w-full max-w-3xl h-full flex flex-col">
+      <div className='w-full flex justify-end'>
+        <ButtonHome name="Volver al inicio" className="mb-5" />
+      </div>
       <section className="w-full flex justify-center items-center mt-16">
         <Form {...form}>
           <form
@@ -189,9 +186,9 @@ function MainForm() {
             {files.length > 0 ? (
               <section
                 className={cn(
-                  'flex flex-wrap items-center bg-white/10 rounded-lg p-5 min-h-[220px] border-[3px] border-transparent',
+                  'flex flex-wrap items-center justify-center rounded-lg p-5 min-h-[220px] border-[3px] border-transparent',
                   themeSelected === 'halloween' && 'bg-orange-500/5',
-                  themeSelected === 'navidad' && 'bg-green-500/5',
+                  themeSelected === 'christmas' && 'bg-green-500/5',
                 )}
               >
                 {files.map((file, index) => (
@@ -240,7 +237,7 @@ function MainForm() {
                     <span className="text-2xl font-semibold">
                       Sube o arrastra tu imagen
                     </span>
-                    <span className="text-base">Max. 1 imagen</span>
+                    <span className="text-sm">Máximo una imagen de 2mb</span>
                   </div>
                 </FormLabel>
               </div>
@@ -252,15 +249,15 @@ function MainForm() {
             )}
 
             {/* THEME */}
-            <section className="w-full flex gap-x-3 items-center justify-center mb-8 mt-10 relative">
-              {themeSelected === 'navidad' && (
+            <section className="w-full flex gap-x-3 items-center justify-center my-10 relative">
+              {/* {themeSelected === 'navidad' && (
                 <div className="absolute opacity-40 text-sm -bottom-7 right-0">
                   La temporada actual es de{' '}
                   <span className="font-semibold">Halloween</span>{' '}
                 </div>
-              )}
+              )} */}
               <div className="text-lg">
-                <span>Selecciona un tema</span>
+                <span>Elige una temática para tu imagen</span>
               </div>
               <Popover open={open} onOpenChange={setOpen}>
                 <PopoverTrigger asChild>
@@ -270,9 +267,9 @@ function MainForm() {
                     role="combobox"
                     aria-expanded={open}
                     className={cn(
-                      'w-full flex-1 justify-between text-lg border border-transparent',
+                      'w-full flex-1 justify-between text-lg border',
                       themeSelected === 'halloween' && 'border-orange-500',
-                      themeSelected === 'navidad' && 'border-green-500',
+                      themeSelected === 'christmas' && 'border-green-500',
                     )}
                   >
                     {themeSelected
@@ -318,27 +315,27 @@ function MainForm() {
             </section>
 
             {/* SOCIAL MEDIA */}
-            <div className="flex items-center justify-center space-x-2">
+            <div className="flex items-center justify-start space-x-2 mb-5">
               <input
                 id="social_media"
                 type="checkbox"
                 className={cn({
                   'accent-orange-500': themeSelected == 'halloween',
-                  'accent-green-500': themeSelected == 'navidad',
+                  'accent-green-500': themeSelected == 'christmas',
                 })}
                 onChange={handleSMCheck}
                 checked={socialMediaCheck}
               />
-              <label
+              <FormLabel
                 htmlFor="social_media"
                 className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
               >
                 Contenido para redes sociales
-              </label>
+              </FormLabel>
             </div>
 
             {socialMediaCheck && (
-              <div className="flex items-center justify-around gap-x-2">
+              <div className="flex items-center justify-around gap-x-2 mb-10">
                 {socialButtons.map(({ social, Icon }, index) => (
                   <button
                     key={index}
@@ -350,7 +347,7 @@ function MainForm() {
                     className={cn('hover:bg-[#180e21] p-2 rounded-md', {
                       'bg-[#180e21] border': socialSelected === social,
                       'border-orange-500': themeSelected === 'halloween',
-                      'border-green-500': themeSelected === 'navidad',
+                      'border-green-500': themeSelected === 'christmas',
                     })}
                   >
                     <Icon className="size-8" />
@@ -360,42 +357,12 @@ function MainForm() {
             )}
 
             {/* DESCRIPTION */}
-            <label
-              htmlFor=""
-              className="text-lg inline-block mb-2 text-white/80"
-            >
-              Agrega una descripción extra para trasnformar tu imagen
-            </label>
             <FormField
               control={form.control}
               name="description"
               render={({ field }) => (
                 <FormItem>
-                  <FormControl>
-                    <Textarea
-                      placeholder="Ej: Fantasmas alrededor"
-                      className={cn(
-                        'resize-none outline-none ring-0 focus:outline-none focus:ring-0 focus:border-none text-lg',
-                        {
-                          'border border-orange-500':
-                            themeSelected === 'halloween' && files.length > 0,
-                          'border border-green-500':
-                            themeSelected === 'navidad' && files.length > 0,
-                        },
-                      )}
-                      {...field}
-                    />
-                  </FormControl>
-                  <FormMessage className="text-red-500 text-base" />
-                </FormItem>
-              )}
-            />
-            {/* DESCRIPTION */}
-            <FormField
-              control={form.control}
-              name="description"
-              render={({ field }) => (
-                <FormItem>
+                  <FormLabel >Agrega una promoción para trasnformar tu imagen</FormLabel>
                   <FormControl>
                     <Textarea
                       placeholder="20% de descuento, 2X1, producto gratis..."
@@ -425,7 +392,7 @@ function MainForm() {
                   'halloween-button':
                     themeSelected === 'halloween' && files.length > 0,
                   'navidad-button':
-                    themeSelected === 'navidad' && files.length > 0,
+                    themeSelected === 'christmas' && files.length > 0,
                 },
                 'disabled:opacity-50 disabled:pointer-events-none',
               )}
@@ -436,8 +403,6 @@ function MainForm() {
           </form>
         </Form>
       </section>
-
-      <Footer />
     </div>
   )
 }
