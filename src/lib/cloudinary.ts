@@ -74,6 +74,22 @@ const updateBackgroundImage = async (
 }
 
 // Generate a caption for an image : https://cloudinary.com/blog/ai-powered-captioning-add-on
+export const generateCaptionMode = async (image: string) => {
+	try {
+		const generativeCaptionImage = await generateCaption(image)
+		return generativeCaptionImage
+	} catch (error: any) {
+		console.log('error:', error)
+		// const { message } = error as Error
+		if (error.message.includes('423 Locked')) {
+			console.log('message 423:', error.message)
+			const generativeCaptionImage = await generateCaption(image)
+			return generativeCaptionImage
+		}
+		throw new Error('Error generating caption for image')
+	}
+}
+
 export const generateCaption = async (image: string) => {
 	return cloudinary.uploader.upload(image, {
 		detection: 'captioning',
