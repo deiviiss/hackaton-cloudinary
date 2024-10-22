@@ -1,4 +1,5 @@
 import { v2 as cloudinary } from 'cloudinary'
+import { Readable } from 'stream'
 
 import { SocialMedia } from '@/types/api/photo'
 
@@ -9,21 +10,48 @@ cloudinary.config({
 	api_secret: process.env.CLOUDINARY_API_SECRET,
 })
 
+function bufferToStream(buffer: Buffer) {
+	const readable = new Readable()
+	readable.push(buffer)
+	readable.push(null) // Indica el final del stream
+	return readable
+}
+
 const uploadImageToCloudinary = async (image: File) => {
 	try {
 		// Convert the image to a buffer
-		const buffer = await image.arrayBuffer()
-		const base64Image = Buffer.from(buffer).toString('base64')
+		const arrayBuffer = await image.arrayBuffer()
+		const buffer = Buffer.from(arrayBuffer)
+
+		const fileStream = bufferToStream(buffer)
 
 		// Upload the image to Cloudinary
-		const uploadResponse = await cloudinary.uploader.upload(
-			`data:image/png;base64,${base64Image}`,
-			{
-				folder: 'hackathon',
-			},
-		)
+		const uploadResult = await new Promise((resolve, reject) => {
+			const uploadStream = cloudinary.uploader.upload_stream(
+				{
+					resource_type: 'image',
+					folder: 'hackathon',
+					overwrite: true,
+				},
+				(error, result) => {
+					if (error) {
+						reject(error)
+					} else {
+						resolve(result)
+					}
+				},
+			)
 
-		return uploadResponse
+			// Passing file stream to Cloudinary stream
+			fileStream.pipe(uploadStream)
+		})
+
+		const { secure_url, public_id } = uploadResult as {
+			secure_url: string
+			public_id: string
+		}
+
+		return { secure_url, public_id }
 	} catch (error) {
 		throw new Error('Error uploading image to Cloudinary')
 	}
