@@ -4,6 +4,8 @@ import { end, start } from '@/helpers/performance'
 import { generateSocialMediaUrl } from '@/lib/cloudinary'
 import { SocialMediaSchema } from '@/schemas/social-media'
 
+export const maxDuration = 60; // This function can run for a maximum of 5 seconds
+
 export async function POST(request: Request) {
 	start('social-media')
 	try {
