@@ -84,22 +84,22 @@ const formSchema = z.object({
 
 function MainForm() {
   const [open, setOpen] = useState(false)
-  const [themeSelected, setThemeSelected] = useState('')
+  const [themeSelected, setThemeSelected] = useState(themes[0].value)
   const [imageError, setImageError] = useState<string | null>(null)
   const [files, setFiles] = useState<File[]>([])
   const [socialMediaCheck, setSocialMediaCheck] = useState(true)
-  const [socialSelected, setSocialSelected] = useState('')
+  const [socialSelected, setSocialSelected] = useState(socialButtons[0].social)
   const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
   const setData = useImageStore((state) => state.setData)
 
   const onDrop = (acceptedFiles: any) => {
-    if (acceptedFiles[0].size >= 10000000) {
+    if (acceptedFiles[0].size >= 4 * 1024 * 1024) {
       setImageError(
-        `Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}MB`,
+        `Máximo 4 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_048_576).toFixed(1)}MB`
       )
       errorToast(
-        `Máximo 10 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_000_000).toFixed(1)}MB`,
+        `Máximo 4 MB, tu archivo pesa ${(acceptedFiles[0].size / 1_048_576).toFixed(1)}MB`
       )
       return
     }
@@ -130,7 +130,7 @@ function MainForm() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
-      description: '',
+      description: '20% de descuento',
     },
   })
 
@@ -237,7 +237,7 @@ function MainForm() {
                     <span className="text-2xl font-semibold">
                       Sube o arrastra tu imagen
                     </span>
-                    <span className="text-sm">Máximo una imagen de 2mb</span>
+                    <span className="text-sm">Máximo una imagen de 4mb</span>
                   </div>
                 </FormLabel>
               </div>
@@ -250,12 +250,6 @@ function MainForm() {
 
             {/* THEME */}
             <section className="w-full flex flex-col sm:flex-row sm:items-center gap-3 items-start justify-center my-10 relative">
-              {/* {themeSelected === 'navidad' && (
-                <div className="absolute opacity-40 text-sm -bottom-7 right-0">
-                  La temporada actual es de{' '}
-                  <span className="font-semibold">Halloween</span>{' '}
-                </div>
-              )} */}
               <div className="text-lg">
                 <span>Elige una temática para tu imagen</span>
               </div>
