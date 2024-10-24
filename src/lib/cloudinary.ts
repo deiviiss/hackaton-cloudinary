@@ -74,6 +74,39 @@ const updateBackgroundImage = async (
 }
 
 // Generate a caption for an image : https://cloudinary.com/blog/ai-powered-captioning-add-on
+// Función sleep para esperar un tiempo definido
+const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
+
+export const generateCaptionMode = async (image: string) => {
+	const MAX_RETRIES = 3 // Número máximo de reintentos
+	let attempts = 0
+
+	while (attempts < MAX_RETRIES) {
+		try {
+			const generativeCaptionImage = await generateCaption(image)
+			return generativeCaptionImage
+		} catch (error: any) {
+			attempts++
+
+			// Si el error es '423 Locked', reintenta con un retraso de 1 segundo
+			if (error.message.includes('423 Locked')) {
+				console.log(
+					`Reintento ${attempts} debido a 423 Locked. Esperando 1 segundo...`,
+				)
+				await sleep(3000) // Espera de 3 segundo antes de reintentar
+				continue // Reintenta
+			}
+
+			// Si el error no es '423 Locked' o se superaron los reintentos, lanza un error
+			throw new Error(
+				'Error generating caption image without 423 Locked: ' + error.message,
+			)
+		}
+	}
+
+	throw new Error('Max retries reached. Could not generate caption for image')
+}
+
 export const generateCaption = async (image: string) => {
 	return cloudinary.uploader.upload(image, {
 		detection: 'captioning',
